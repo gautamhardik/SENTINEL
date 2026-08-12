@@ -52,11 +52,9 @@ RUN adduser --system --group --no-create-home sentinel && \
 
 USER sentinel
 
-EXPOSE 8000
-
 # Container healthcheck using lightweight GET /health endpoint
 HEALTHCHECK --interval=15s --timeout=5s --start-period=30s --retries=3 \
-  CMD curl -f http://localhost:8000/health || exit 1
+  CMD curl -f http://localhost:${PORT:-8000}/health || exit 1
 
-# Production server entrypoint
-CMD ["python", "-m", "uvicorn", "src.fraud_detection.api.app:app", "--host", "0.0.0.0", "--port", "8000"]
+# Production server entrypoint with dynamic PORT support for cloud hosts (Render/Northflank/Koyeb)
+CMD ["sh", "-c", "exec uvicorn src.fraud_detection.api.app:app --host 0.0.0.0 --port ${PORT:-8000}"]
