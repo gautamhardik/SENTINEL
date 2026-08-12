@@ -1,0 +1,429 @@
+{
+  "Amount_Paid": {
+    "mean": 2554199.3901,
+    "std": 34406320.7493,
+    "median": 3139.93,
+    "min": 0.01,
+    "max": 736307822.35
+  },
+  "Amount_Received": {
+    "mean": 2554199.3901,
+    "std": 34406320.7493,
+    "median": 3139.93,
+    "min": 0.01,
+    "max": 736307822.35
+  },
+  "is_amount_outlier": {
+    "mean": 0.162,
+    "std": 0.3686,
+    "median": 0.0,
+    "min": 0.0,
+    "max": 1.0
+  },
+  "amount_paid": {
+    "mean": 2554199.3901,
+    "std": 34406320.7493,
+    "median": 3139.93,
+    "min": 0.01,
+    "max": 736307822.35
+  },
+  "amount_received": {
+    "mean": 2554199.3901,
+    "std": 34406320.7493,
+    "median": 3139.93,
+    "min": 0.01,
+    "max": 736307822.35
+  },
+  "amount_difference": {
+    "mean": 0.0,
+    "std": 0.0,
+    "median": 0.0,
+    "min": 0.0,
+    "max": 0.0
+  },
+  "amount_ratio": {
+    "mean": 1.0,
+    "std": 0.0,
+    "median": 1.0,
+    "min": 0.999,
+    "max": 1.0
+  },
+  "log_amount": {
+    "mean": 7.516,
+    "std": 4.0244,
+    "median": 8.0521,
+    "min": 0.01,
+    "max": 20.4172
+  },
+  "self_transfer_flag": {
+    "mean": 0.68,
+    "std": 0.4667,
+    "median": 1.0,
+    "min": 0.0,
+    "max": 1.0
+  },
+  "cross_bank_flag": {
+    "mean": 0.299,
+    "std": 0.458,
+    "median": 0.0,
+    "min": 0.0,
+    "max": 1.0
+  },
+  "high_value_flag": {
+    "mean": 0.361,
+    "std": 0.4805,
+    "median": 0.0,
+    "min": 0.0,
+    "max": 1.0
+  },
+  "zero_amount_flag": {
+    "mean": 0.0,
+    "std": 0.0,
+    "median": 0.0,
+    "min": 0.0,
+    "max": 0.0
+  },
+  "currency_mismatch_flag": {
+    "mean": 0.0,
+    "std": 0.0,
+    "median": 0.0,
+    "min": 0.0,
+    "max": 0.0
+  },
+  "payment_format_encoded": {
+    "mean": 481.898,
+    "std": 269.4965,
+    "median": 670.0,
+    "min": 13.0,
+    "max": 670.0
+  },
+  "hour": {
+    "mean": 0.0,
+    "std": 0.0,
+    "median": 0.0,
+    "min": 0.0,
+    "max": 0.0
+  },
+  "weekday": {
+    "mean": 4.0,
+    "std": 0.0,
+    "median": 4.0,
+    "min": 4.0,
+    "max": 4.0
+  },
+  "month": {
+    "mean": 9.0,
+    "std": 0.0,
+    "median": 9.0,
+    "min": 9.0,
+    "max": 9.0
+  },
+  "quarter": {
+    "mean": 3.0,
+    "std": 0.0,
+    "median": 3.0,
+    "min": 3.0,
+    "max": 3.0
+  },
+  "weekend_flag": {
+    "mean": 0.0,
+    "std": 0.0,
+    "median": 0.0,
+    "min": 0.0,
+    "max": 0.0
+  },
+  "business_hours_flag": {
+    "mean": 0.0,
+    "std": 0.0,
+    "median": 0.0,
+    "min": 0.0,
+    "max": 0.0
+  },
+  "night_transaction_flag": {
+    "mean": 1.0,
+    "std": 0.0,
+    "median": 1.0,
+    "min": 1.0,
+    "max": 1.0
+  },
+  "sin_hour": {
+    "mean": 0.0,
+    "std": 0.0,
+    "median": 0.0,
+    "min": 0.0,
+    "max": 0.0
+  },
+  "cos_hour": {
+    "mean": 1.0,
+    "std": 0.0,
+    "median": 1.0,
+    "min": 1.0,
+    "max": 1.0
+  },
+  "sin_day": {
+    "mean": -0.4339,
+    "std": 0.0,
+    "median": -0.4339,
+    "min": -0.4339,
+    "max": -0.4339
+  },
+  "cos_day": {
+    "mean": -0.901,
+    "std": 0.0,
+    "median": -0.901,
+    "min": -0.901,
+    "max": -0.901
+  },
+  "account_transaction_count": {
+    "mean": 0.84,
+    "std": 3.1097,
+    "median": 0.0,
+    "min": 0.0,
+    "max": 30.0
+  },
+  "account_total_paid": {
+    "mean": 2031079.6916,
+    "std": 36436656.5245,
+    "median": 0.0,
+    "min": 0.0,
+    "max": 997928146.19
+  },
+  "account_total_received": {
+    "mean": 3085317.5283,
+    "std": 48378771.3629,
+    "median": 0.0,
+    "min": 0.0,
+    "max": 997932478.77
+  },
+  "account_avg_amount": {
+    "mean": 878721.6269,
+    "std": 14492384.5816,
+    "median": 0.0,
+    "min": 0.0,
+    "max": 332641606.5913
+  },
+  "account_max_amount": {
+    "mean": 1510408.1087,
+    "std": 24949907.4686,
+    "median": 0.0,
+    "min": 0.0,
+    "max": 538582252.32
+  },
+  "account_min_amount": {
+    "mean": 181073.5179,
+    "std": 4683606.9355,
+    "median": 0.0,
+    "min": 0.0,
+    "max": 147442124.4
+  },
+  "ratio_to_account_average": {
+    "mean": 31038723761.0723,
+    "std": 474613586513.1892,
+    "median": 3979000.0,
+    "min": 0.0,
+    "max": 14744212440000.0
+  },
+  "ratio_to_account_max": {
+    "mean": 31038723753.1898,
+    "std": 474613586513.7053,
+    "median": 3979000.0,
+    "min": 0.0,
+    "max": 14744212440000.0
+  },
+  "account_net_flow": {
+    "mean": -1054237.8367,
+    "std": 31915262.1179,
+    "median": 0.0,
+    "min": -997928146.19,
+    "max": 9940725.0
+  },
+  "seconds_since_last_tx": {
+    "mean": 742109.598,
+    "std": 437565.3202,
+    "median": 999999.0,
+    "min": 0.0,
+    "max": 999999.0
+  },
+  "receiver_seconds_since_last_tx": {
+    "mean": 744125.016,
+    "std": 436425.299,
+    "median": 999999.0,
+    "min": 0.0,
+    "max": 999999.0
+  },
+  "rapid_transfer_flag": {
+    "mean": 0.127,
+    "std": 0.3331,
+    "median": 0.0,
+    "min": 0.0,
+    "max": 1.0
+  },
+  "days_since_last_transaction": {
+    "mean": 8.5892,
+    "std": 5.0644,
+    "median": 11.5741,
+    "min": 0.0,
+    "max": 11.5741
+  },
+  "receiver_rapid_flag": {
+    "mean": 0.116,
+    "std": 0.3204,
+    "median": 0.0,
+    "min": 0.0,
+    "max": 1.0
+  },
+  "amount_zscore": {
+    "mean": 1588.4604,
+    "std": 37405.3609,
+    "median": -0.0762,
+    "min": -0.8332,
+    "max": 1058000.0
+  },
+  "account_variance": {
+    "mean": 134354064084219.42,
+    "std": 2907687697272445.5,
+    "median": 0.0,
+    "min": 0.0,
+    "max": 7.251071151257998e+16
+  },
+  "account_std": {
+    "mean": 615028.5998,
+    "std": 11580583.4835,
+    "median": 0.0,
+    "min": 0.0,
+    "max": 269278130.4016
+  },
+  "coefficient_of_variation": {
+    "mean": 0.1381,
+    "std": 0.4562,
+    "median": 0.0,
+    "min": 0.0,
+    "max": 2.8359
+  },
+  "bank_fraud_rate": {
+    "mean": 0.2098,
+    "std": 0.1465,
+    "median": 0.25,
+    "min": 0.0,
+    "max": 1.0
+  },
+  "payment_format_risk": {
+    "mean": 0.2224,
+    "std": 0.1261,
+    "median": 0.2435,
+    "min": 0.0,
+    "max": 1.0
+  },
+  "currency_risk": {
+    "mean": 0.2222,
+    "std": 0.0314,
+    "median": 0.2313,
+    "min": 0.0,
+    "max": 0.2517
+  },
+  "sender_out_degree": {
+    "mean": 0.84,
+    "std": 3.1097,
+    "median": 0.0,
+    "min": 0.0,
+    "max": 30.0
+  },
+  "receiver_in_degree": {
+    "mean": 0.393,
+    "std": 0.8032,
+    "median": 0.0,
+    "min": 0.0,
+    "max": 5.0
+  },
+  "unique_counterparties": {
+    "mean": 1.94,
+    "std": 2.4504,
+    "median": 1.0,
+    "min": 1.0,
+    "max": 15.0
+  },
+  "lag_amount_1": {
+    "mean": 1206771.9619,
+    "std": 22851474.2174,
+    "median": 0.0,
+    "min": 0.0,
+    "max": 538582252.32
+  },
+  "lag_amount_2": {
+    "mean": 703029.4964,
+    "std": 17653752.0078,
+    "median": 0.0,
+    "min": 0.0,
+    "max": 538582252.32
+  },
+  "lag_amount_5": {
+    "mean": 6005.936,
+    "std": 94628.0708,
+    "median": 0.0,
+    "min": 0.0,
+    "max": 2623544.8
+  },
+  "rolling_mean_5": {
+    "mean": 7519.9663,
+    "std": 60976.6751,
+    "median": 0.0,
+    "min": 0.0,
+    "max": 821787.066
+  },
+  "rolling_mean_20": {
+    "mean": 1889.3905,
+    "std": 19689.1284,
+    "median": 0.0,
+    "min": 0.0,
+    "max": 261163.9595
+  },
+  "rolling_std_5": {
+    "mean": 12742.5736,
+    "std": 106647.0867,
+    "median": 0.0,
+    "min": 0.0,
+    "max": 1415973.8896
+  },
+  "rolling_max_5": {
+    "mean": 29416.7007,
+    "std": 244433.8714,
+    "median": 0.0,
+    "min": 0.0,
+    "max": 3173854.66
+  },
+  "rolling_min_5": {
+    "mean": 327.933,
+    "std": 6510.5928,
+    "median": 0.0,
+    "min": 0.0,
+    "max": 203727.95
+  },
+  "rolling_sum_5": {
+    "mean": 37599.8314,
+    "std": 304883.3756,
+    "median": 0.0,
+    "min": 0.0,
+    "max": 4108935.33
+  },
+  "rolling_sum_20": {
+    "mean": 37787.8102,
+    "std": 393782.567,
+    "median": 0.0,
+    "min": 0.0,
+    "max": 5223279.19
+  },
+  "amount_diff_lag1": {
+    "mean": 1347427.4282,
+    "std": 30009019.0741,
+    "median": 1771.94,
+    "min": -147415941.01,
+    "max": 736281638.96
+  },
+  "amount_diff_rolling5": {
+    "mean": 2546679.4238,
+    "std": 34406720.4712,
+    "median": 2601.43,
+    "min": -806279.246,
+    "max": 736307822.35
+  }
+}

@@ -1,0 +1,429 @@
+{
+  "numeric__Amount_Paid": {
+    "mean": -0.0643,
+    "std": 0.0485,
+    "median": -0.0754,
+    "p25": -0.0754,
+    "p75": -0.0749
+  },
+  "numeric__Amount_Received": {
+    "mean": -0.0643,
+    "std": 0.0485,
+    "median": -0.0754,
+    "p25": -0.0754,
+    "p75": -0.0749
+  },
+  "numeric__is_amount_outlier": {
+    "mean": -0.1431,
+    "std": 0.8566,
+    "median": -0.4594,
+    "p25": -0.4594,
+    "p75": -0.4594
+  },
+  "numeric__amount_paid": {
+    "mean": -0.0643,
+    "std": 0.0485,
+    "median": -0.0754,
+    "p25": -0.0754,
+    "p75": -0.0749
+  },
+  "numeric__amount_received": {
+    "mean": -0.0643,
+    "std": 0.0485,
+    "median": -0.0754,
+    "p25": -0.0754,
+    "p75": -0.0749
+  },
+  "numeric__amount_difference": {
+    "mean": 0.0,
+    "std": 0.0,
+    "median": 0.0,
+    "p25": 0.0,
+    "p75": 0.0
+  },
+  "numeric__amount_ratio": {
+    "mean": 0.0072,
+    "std": 0.4301,
+    "median": 0.05,
+    "p25": 0.0374,
+    "p75": 0.0501
+  },
+  "numeric__log_amount": {
+    "mean": -0.0409,
+    "std": 0.9668,
+    "median": 0.1023,
+    "p25": -1.0774,
+    "p75": 0.6045
+  },
+  "numeric__self_transfer_flag": {
+    "mean": 0.1458,
+    "std": 0.9313,
+    "median": 0.6882,
+    "p25": -0.9177,
+    "p75": 0.6882
+  },
+  "numeric__cross_bank_flag": {
+    "mean": -0.1571,
+    "std": 0.9149,
+    "median": -0.6524,
+    "p25": -0.6524,
+    "p75": -0.6524
+  },
+  "numeric__high_value_flag": {
+    "mean": -0.0219,
+    "std": 0.9932,
+    "median": -0.7454,
+    "p25": -0.7454,
+    "p75": 1.3416
+  },
+  "numeric__zero_amount_flag": {
+    "mean": 0.0,
+    "std": 0.0,
+    "median": 0.0,
+    "p25": 0.0,
+    "p75": 0.0
+  },
+  "numeric__currency_mismatch_flag": {
+    "mean": 0.0,
+    "std": 0.0,
+    "median": 0.0,
+    "p25": 0.0,
+    "p75": 0.0
+  },
+  "numeric__payment_format_encoded": {
+    "mean": 0.1512,
+    "std": 0.9189,
+    "median": 0.7029,
+    "p25": -1.2324,
+    "p75": 0.7029
+  },
+  "numeric__hour": {
+    "mean": 0.0,
+    "std": 0.0,
+    "median": 0.0,
+    "p25": 0.0,
+    "p75": 0.0
+  },
+  "numeric__weekday": {
+    "mean": 0.0,
+    "std": 0.0,
+    "median": 0.0,
+    "p25": 0.0,
+    "p75": 0.0
+  },
+  "numeric__month": {
+    "mean": 0.0,
+    "std": 0.0,
+    "median": 0.0,
+    "p25": 0.0,
+    "p75": 0.0
+  },
+  "numeric__quarter": {
+    "mean": 0.0,
+    "std": 0.0,
+    "median": 0.0,
+    "p25": 0.0,
+    "p75": 0.0
+  },
+  "numeric__weekend_flag": {
+    "mean": 0.0,
+    "std": 0.0,
+    "median": 0.0,
+    "p25": 0.0,
+    "p75": 0.0
+  },
+  "numeric__business_hours_flag": {
+    "mean": 0.0,
+    "std": 0.0,
+    "median": 0.0,
+    "p25": 0.0,
+    "p75": 0.0
+  },
+  "numeric__night_transaction_flag": {
+    "mean": 0.0,
+    "std": 0.0,
+    "median": 0.0,
+    "p25": 0.0,
+    "p75": 0.0
+  },
+  "numeric__sin_hour": {
+    "mean": 0.0,
+    "std": 0.0,
+    "median": 0.0,
+    "p25": 0.0,
+    "p75": 0.0
+  },
+  "numeric__cos_hour": {
+    "mean": 0.0,
+    "std": 0.0,
+    "median": 0.0,
+    "p25": 0.0,
+    "p75": 0.0
+  },
+  "numeric__sin_day": {
+    "mean": -0.0,
+    "std": 0.0,
+    "median": -0.0,
+    "p25": -0.0,
+    "p75": -0.0
+  },
+  "numeric__cos_day": {
+    "mean": 0.0,
+    "std": 0.0,
+    "median": 0.0,
+    "p25": 0.0,
+    "p75": 0.0
+  },
+  "numeric__account_transaction_count": {
+    "mean": 0.0758,
+    "std": 1.2358,
+    "median": -0.2631,
+    "p25": -0.2631,
+    "p75": 0.0924
+  },
+  "numeric__account_total_paid": {
+    "mean": -0.0539,
+    "std": 0.0434,
+    "median": -0.0633,
+    "p25": -0.0633,
+    "p75": -0.0633
+  },
+  "numeric__account_total_received": {
+    "mean": -0.0621,
+    "std": 0.0246,
+    "median": -0.0664,
+    "p25": -0.0664,
+    "p75": -0.0664
+  },
+  "numeric__account_avg_amount": {
+    "mean": -0.0551,
+    "std": 0.0515,
+    "median": -0.0628,
+    "p25": -0.0628,
+    "p75": -0.0628
+  },
+  "numeric__account_max_amount": {
+    "mean": -0.0537,
+    "std": 0.0334,
+    "median": -0.0606,
+    "p25": -0.0606,
+    "p75": -0.0606
+  },
+  "numeric__account_min_amount": {
+    "mean": -0.0291,
+    "std": 0.109,
+    "median": -0.0431,
+    "p25": -0.0431,
+    "p75": -0.0431
+  },
+  "numeric__ratio_to_account_average": {
+    "mean": -0.0062,
+    "std": 0.2975,
+    "median": -0.061,
+    "p25": -0.061,
+    "p75": -0.0603
+  },
+  "numeric__ratio_to_account_max": {
+    "mean": -0.0062,
+    "std": 0.2975,
+    "median": -0.061,
+    "p25": -0.061,
+    "p75": -0.0603
+  },
+  "numeric__account_net_flow": {
+    "mean": 0.0389,
+    "std": 0.1343,
+    "median": 0.02,
+    "p25": 0.02,
+    "p75": 0.02
+  },
+  "numeric__seconds_since_last_tx": {
+    "mean": -0.3258,
+    "std": 1.1562,
+    "median": 0.5289,
+    "p25": -1.8892,
+    "p75": 0.5289
+  },
+  "numeric__receiver_seconds_since_last_tx": {
+    "mean": -0.3843,
+    "std": 1.1826,
+    "median": 0.5156,
+    "p25": -1.9379,
+    "p75": 0.5156
+  },
+  "numeric__rapid_transfer_flag": {
+    "mean": -0.1015,
+    "std": 0.8732,
+    "median": -0.3817,
+    "p25": -0.3817,
+    "p75": -0.3817
+  },
+  "numeric__days_since_last_transaction": {
+    "mean": -0.3258,
+    "std": 1.1562,
+    "median": 0.5289,
+    "p25": -1.8892,
+    "p75": 0.5289
+  },
+  "numeric__receiver_rapid_flag": {
+    "mean": -0.1342,
+    "std": 0.8223,
+    "median": -0.3767,
+    "p25": -0.3767,
+    "p75": -0.3767
+  },
+  "numeric__amount_zscore": {
+    "mean": -0.0508,
+    "std": 0.0,
+    "median": -0.0508,
+    "p25": -0.0508,
+    "p75": -0.0508
+  },
+  "numeric__account_variance": {
+    "mean": -0.0406,
+    "std": 0.0,
+    "median": -0.0406,
+    "p25": -0.0406,
+    "p75": -0.0406
+  },
+  "numeric__account_std": {
+    "mean": -0.0474,
+    "std": 0.0121,
+    "median": -0.0495,
+    "p25": -0.0495,
+    "p75": -0.0495
+  },
+  "numeric__coefficient_of_variation": {
+    "mean": 0.045,
+    "std": 1.0687,
+    "median": -0.2828,
+    "p25": -0.2828,
+    "p75": -0.2754
+  },
+  "numeric__bank_fraud_rate": {
+    "mean": 0.0193,
+    "std": 0.8322,
+    "median": 0.2484,
+    "p25": -0.015,
+    "p75": 0.339
+  },
+  "numeric__payment_format_risk": {
+    "mean": -0.0304,
+    "std": 0.5418,
+    "median": 0.0894,
+    "p25": 0.072,
+    "p75": 0.1211
+  },
+  "numeric__currency_risk": {
+    "mean": 0.0456,
+    "std": 0.0722,
+    "median": 0.0442,
+    "p25": -0.0112,
+    "p75": 0.1086
+  },
+  "numeric__sender_out_degree": {
+    "mean": 0.0758,
+    "std": 1.2358,
+    "median": -0.2631,
+    "p25": -0.2631,
+    "p75": 0.0924
+  },
+  "numeric__receiver_in_degree": {
+    "mean": 0.4665,
+    "std": 1.5161,
+    "median": -0.4478,
+    "p25": -0.4478,
+    "p75": 1.0593
+  },
+  "numeric__unique_counterparties": {
+    "mean": -0.1515,
+    "std": 0.6361,
+    "median": -0.3878,
+    "p25": -0.3878,
+    "p75": -0.0108
+  },
+  "numeric__lag_amount_1": {
+    "mean": -0.0447,
+    "std": 0.029,
+    "median": -0.0488,
+    "p25": -0.0488,
+    "p75": -0.0488
+  },
+  "numeric__lag_amount_2": {
+    "mean": -0.0387,
+    "std": 0.022,
+    "median": -0.0408,
+    "p25": -0.0408,
+    "p75": -0.0408
+  },
+  "numeric__lag_amount_5": {
+    "mean": -0.0271,
+    "std": 0.4124,
+    "median": -0.068,
+    "p25": -0.068,
+    "p75": -0.068
+  },
+  "numeric__rolling_mean_5": {
+    "mean": 0.0483,
+    "std": 1.4562,
+    "median": -0.1262,
+    "p25": -0.1262,
+    "p75": -0.1262
+  },
+  "numeric__rolling_mean_20": {
+    "mean": -0.046,
+    "std": 0.3858,
+    "median": -0.0909,
+    "p25": -0.0909,
+    "p75": -0.0909
+  },
+  "numeric__rolling_std_5": {
+    "mean": 0.0141,
+    "std": 1.1916,
+    "median": -0.1201,
+    "p25": -0.1201,
+    "p75": -0.1201
+  },
+  "numeric__rolling_max_5": {
+    "mean": 0.0144,
+    "std": 1.1808,
+    "median": -0.1208,
+    "p25": -0.1208,
+    "p75": -0.1208
+  },
+  "numeric__rolling_min_5": {
+    "mean": 1.15,
+    "std": 14.975,
+    "median": -0.1353,
+    "p25": -0.1353,
+    "p75": -0.1353
+  },
+  "numeric__rolling_sum_5": {
+    "mean": 0.0483,
+    "std": 1.4562,
+    "median": -0.1262,
+    "p25": -0.1262,
+    "p75": -0.1262
+  },
+  "numeric__rolling_sum_20": {
+    "mean": -0.046,
+    "std": 0.3858,
+    "median": -0.0909,
+    "p25": -0.0909,
+    "p75": -0.0909
+  },
+  "numeric__amount_diff_lag1": {
+    "mean": -0.044,
+    "std": 0.0565,
+    "median": -0.0537,
+    "p25": -0.0537,
+    "p75": -0.0533
+  },
+  "numeric__amount_diff_rolling5": {
+    "mean": -0.0644,
+    "std": 0.0481,
+    "median": -0.0752,
+    "p25": -0.0752,
+    "p75": -0.0747
+  }
+}

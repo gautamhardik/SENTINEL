@@ -1,0 +1,7 @@
+{
+  "optimal_threshold": 0.2556561085972851,
+  "f1_score": 0.6559943703182258,
+  "precision": 0.578615604186489,
+  "recall": 0.7572770196648161,
+  "calibrated": true
+}

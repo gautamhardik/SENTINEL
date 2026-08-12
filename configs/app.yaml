@@ -1,0 +1,21 @@
+app:
+  name: "Enterprise Fraud Detection System"
+  environment: "production"
+  debug: false
+  request_timeout_seconds: 5.0
+
+model:
+  active_registry_pointer: "models/registry.json"
+  fallback_threshold: 0.26
+  max_batch_size: 10000
+
+logging:
+  level: "INFO"
+  format: "json"
+  mask_sensitive_fields: true
+  sensitive_keys: ["card_number", "ssn", "cvv", "customer_name"]
+
+feature:
+  target_column: "is_laundering"
+  timestamp_column: "Timestamp"
+  id_columns: ["Account_ID", "Transaction_ID"]

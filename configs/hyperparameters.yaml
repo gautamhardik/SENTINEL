@@ -1,0 +1,68 @@
+# Optuna Hyperparameter Optimization Search Spaces
+
+lightgbm:
+  n_estimators:
+    low: 50
+    high: 300
+  learning_rate:
+    low: 0.01
+    high: 0.2
+    log: true
+  num_leaves:
+    low: 15
+    high: 127
+  max_depth:
+    low: 3
+    high: 10
+  subsample:
+    low: 0.6
+    high: 1.0
+  colsample_bytree:
+    low: 0.6
+    high: 1.0
+  reg_alpha:
+    low: 1e-8
+    high: 10.0
+    log: true
+  reg_lambda:
+    low: 1e-8
+    high: 10.0
+    log: true
+
+catboost:
+  iterations:
+    low: 50
+    high: 300
+  learning_rate:
+    low: 0.01
+    high: 0.2
+    log: true
+  depth:
+    low: 4
+    high: 8
+  l2_leaf_reg:
+    low: 1.0
+    high: 10.0
+    log: true
+
+xgboost:
+  n_estimators:
+    low: 50
+    high: 300
+  learning_rate:
+    low: 0.01
+    high: 0.2
+    log: true
+  max_depth:
+    low: 3
+    high: 9
+  subsample:
+    low: 0.6
+    high: 1.0
+  colsample_bytree:
+    low: 0.6
+    high: 1.0
+  gamma:
+    low: 1e-8
+    high: 5.0
+    log: true

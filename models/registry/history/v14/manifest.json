@@ -1,0 +1,27 @@
+{
+  "experiment_id": "exp_v14",
+  "model_name": "catboost_Tuned",
+  "model_version": "v14",
+  "dataset_path": "C:\\Users\\hiten\\OneDrive\\Documents\\Fraud Detection\\data\\features\\features_fraud.parquet",
+  "feature_store_version": "1.0.0",
+  "git_commit": "Phase5-release",
+  "timestamp": "Validation",
+  "framework_versions": {
+    "scikit_learn": "1.6.1",
+    "lightgbm": "4.6.0"
+  },
+  "metrics": {
+    "val_pr_auc": 0.8582,
+    "test_pr_auc": 0.8486,
+    "val_f1": 0.8302,
+    "test_f1": 0.8261,
+    "test_fdr": 76.0
+  },
+  "optimal_threshold": 0.34,
+  "artifact_paths": {
+    "model_joblib": "C:\\Users\\hiten\\OneDrive\\Documents\\Fraud Detection\\models\\registry\\history\\v14\\model.joblib",
+    "preprocessing_joblib": "C:\\Users\\hiten\\OneDrive\\Documents\\Fraud Detection\\models\\registry\\history\\v14\\preprocessing.joblib",
+    "feature_names_json": "C:\\Users\\hiten\\OneDrive\\Documents\\Fraud Detection\\models\\registry\\history\\v14\\feature_names.json",
+    "feature_baseline_json": "C:\\Users\\hiten\\OneDrive\\Documents\\Fraud Detection\\models\\registry\\history\\v14\\feature_baseline.json"
+  }
+}

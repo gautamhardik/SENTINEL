@@ -1,0 +1,33 @@
+# Git & IDE
+.git
+.github
+.vscode
+.idea
+.antigravityignore
+
+# Python & virtual environment
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Node & Next.js
+frontend/node_modules
+frontend/.next
+frontend/out
+
+# Temporary & Log files
+*.log
+logs/
+data/
+.tempmediaStorage/
+
+# Secrets
+.env
+*.pem
+*.key

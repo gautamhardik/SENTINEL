@@ -1,0 +1,20 @@
+feature_store_version: "1.0.0"
+pipeline_version: "Phase4"
+target_column: "is_laundering"
+
+rolling_windows:
+  - 5
+  - 20
+
+business_hours:
+  start: 8
+  end: 18
+
+high_value_threshold: 10000.0
+
+velocity_windows_minutes:
+  short: 60
+  long: 1440
+
+high_correlation_threshold: 0.95
+near_zero_variance_threshold: 0.00001

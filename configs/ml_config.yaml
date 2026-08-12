@@ -1,0 +1,65 @@
+# Enterprise Machine Learning Platform Configuration (Phase 5)
+
+project_name: "Enterprise Fraud Detection Platform"
+seed: 42
+target_column: "is_laundering"
+id_columns:
+  - "transaction_key"
+  - "transaction_id"
+  - "time_key"
+  - "Timestamp"
+  - "from_bank_key"
+  - "from_account_key"
+  - "to_bank_key"
+  - "to_account_key"
+  - "payment_format_key"
+  - "payment_currency_key"
+  - "receiving_currency_key"
+  - "From_Bank"
+  - "From_Account"
+  - "To_Bank"
+  - "To_Account"
+  - "Payment_Format"
+  - "Payment_Currency"
+  - "Receiving_Currency"
+
+data:
+  feature_store_path: "data/features/features_fraud.parquet"
+  splits_dir: "data/splits"
+
+temporal_split:
+  train_ratio: 0.70
+  validation_ratio: 0.15
+  test_ratio: 0.15
+  timestamp_column: "Timestamp"
+
+models:
+  enabled:
+    - "logistic_regression"
+    - "lightgbm"
+    - "catboost"
+    - "xgboost"
+  
+tuning:
+  enabled: true
+  n_trials: 20
+  timeout_seconds: 300
+  study_db_path: "models/tuning/study.db"
+  early_stopping_rounds: 15
+
+calibration:
+  method: "isotonic"  # "isotonic" or "sigmoid"
+  cv: "prefit"
+
+threshold:
+  search_start: 0.05
+  search_end: 0.95
+  search_step: 0.01
+  default_threshold: 0.50
+  business_cost:
+    false_negative_cost: 500.0  # Avg loss from missed fraud
+    false_positive_cost: 15.0   # Operational investigation cost
+
+outputs:
+  reports_dir: "reports"
+  models_dir: "models"

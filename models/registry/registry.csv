@@ -1,0 +1,17 @@
+model_name,model_version,status,val_pr_auc,val_f1,test_pr_auc,test_f1,optimal_threshold,training_time_sec,inference_latency_ms,created_at,git_commit
+LightGBM,v1,CHAMPION,0.88,0.82,0.85,0.8,0.35,1.5,0.1,2026-08-05 21:48:34,Phase5-release
+LightGBM,v2,CHAMPION,0.88,0.82,0.85,0.8,0.35,1.5,0.1,2026-08-05 21:49:46,Phase5-release
+LightGBM,v3,CHAMPION,0.88,0.82,0.85,0.8,0.35,1.5,0.1,2026-08-05 21:50:36,Phase5-release
+LightGBM,v4,CHAMPION,0.88,0.82,0.85,0.8,0.35,1.5,0.1,2026-08-05 21:50:51,Phase5-release
+LightGBM,v5,CHAMPION,0.88,0.82,0.85,0.8,0.35,1.5,0.1,2026-08-05 21:51:25,Phase5-release
+LightGBM,v6,CHAMPION,0.88,0.82,0.85,0.8,0.35,1.5,0.1,2026-08-05 21:51:57,Phase5-release
+LightGBM,v7,CHAMPION,0.88,0.82,0.85,0.8,0.35,1.5,0.1,2026-08-05 21:52:30,Phase5-release
+catboost_Tuned,v8,CHAMPION,0.8514,0.8148,0.8365,0.8182,0.21,16.1,0.0114,2026-08-05 21:53:38,Phase5-release
+LightGBM,v9,CHAMPION,0.88,0.82,0.85,0.8,0.35,1.5,0.1,2026-08-05 21:53:38,Phase5-release
+catboost_Tuned,v10,CHAMPION,0.8527,0.8302,0.8506,0.8372,0.26,27.36,0.0096,2026-08-05 21:54:24,Phase5-release
+catboost_Tuned,v11,CHAMPION,0.8527,0.8302,0.8506,0.8372,0.26,63.35,0.0086,2026-08-05 22:10:47,Phase5-release
+LightGBM,v12,CHAMPION,0.88,0.82,0.85,0.8,0.35,1.5,0.1,2026-08-05 22:10:49,Phase5-release
+catboost_Tuned,v13,CHAMPION,0.8527,0.8302,0.8506,0.8372,0.26,29.2,0.0102,2026-08-05 22:15:46,Phase5-release
+catboost_Tuned,v14,CHAMPION,0.8582,0.8302,0.8486,0.8261,0.34,45.91,0.1048,2026-08-05 22:17:02,Phase5-release
+catboost_Tuned,v15,CHAMPION,0.864,0.8302,0.8312,0.8085,0.26,0.0,0.0205,2026-08-05 22:44:24,v15
+catboost_Tuned,v16,CHAMPION,0.864,0.8302,0.8312,0.8085,0.26,0.0,0.0208,2026-08-05 23:00:30,v16

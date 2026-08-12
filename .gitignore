@@ -1,0 +1,58 @@
+# Python & Virtual Environments
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+
+# Testing & Linting Caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Node & Next.js
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/build/
+.turbo/
+
+# Logs & Temporary Files
+*.log
+logs/*.log
+data/features/temp_*.parquet
+data/*.wal
+.tempmediaStorage/
+
+# Secrets & Environment Files
+.env
+.env.local
+.env.development.local
+.env.production.local
+*.pem
+*.key
+
+# IDE Metadata
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Large Data & Database Files (DO NOT PUSH TO GITHUB)
+*.duckdb
+*.duckdb.wal
+*.parquet
+data/raw/*
+!data/raw/.gitkeep
+data/cleaned/*
+!data/cleaned/.gitkeep
+data/features/*
+!data/features/.gitkeep
+data/*.duckdb
+

@@ -1,0 +1,27 @@
+{
+  "champion_model_version": "v1.0.0",
+  "artifact_directory": "models/champion",
+  "artifacts": {
+    "model": "model_v1.joblib",
+    "preprocessing": "preprocessing_v1.joblib",
+    "calibrator": "calibrator_v1.joblib",
+    "threshold": "threshold_v1.json",
+    "feature_order": "feature_order_v1.json",
+    "feature_schema": "feature_schema_v1.json",
+    "reference_priors": "reference_priors_v1.json",
+    "metadata": "metadata_v1.json"
+  },
+  "metrics": {
+    "model_type": "LGBMClassifier",
+    "dataset": "LI-Large",
+    "training_rows": 1409294,
+    "validation_rows": 301991,
+    "test_rows": 301993,
+    "val_roc_auc": 0.9636150833204746,
+    "val_pr_auc": 0.5635718814421639,
+    "val_brier_score": 0.09067304800215165,
+    "test_roc_auc": 0.9688953204207815,
+    "test_pr_auc": 0.6574273555252742,
+    "trained_at": "2026-08-06 16:38:42"
+  }
+}

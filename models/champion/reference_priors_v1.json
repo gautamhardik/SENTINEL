@@ -1,0 +1,15 @@
+{
+  "prior_positive_rate": 0.04546815639603943,
+  "feature_means": {
+    "numeric__Amount_Paid": 10050536.770738447,
+    "numeric__Amount_Received": 12543774.755655624,
+    "numeric__is_amount_outlier": 0.2618573555269518,
+    "numeric__amount_paid": 10050536.770738447,
+    "numeric__amount_received": 12543774.755655624,
+    "numeric__amount_difference": -2493237.984917178,
+    "numeric__amount_ratio": 4.612580403500948,
+    "numeric__log_amount": 7.474992067480864,
+    "numeric__self_transfer_flag": 0.060099595967910174,
+    "numeric__cross_bank_flag": 0.9324023234328678
+  }
+}

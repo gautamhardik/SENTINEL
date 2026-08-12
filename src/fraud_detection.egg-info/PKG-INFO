@@ -1,0 +1,158 @@
+Metadata-Version: 2.4
+Name: fraud_detection
+Version: 1.0.0
+Summary: Enterprise Fraud Detection ML Inference & Governance Package
+Author-email: Lead AI/ML Engineer <ml-team@enterprise.com>
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: polars>=0.20.0
+Requires-Dist: pandas>=2.0.0
+Requires-Dist: numpy>=1.24.0
+Requires-Dist: scikit-learn>=1.4.0
+Requires-Dist: catboost>=1.2.0
+Requires-Dist: joblib>=1.3.0
+Requires-Dist: pydantic>=2.5.0
+Requires-Dist: pydantic-settings>=2.1.0
+Requires-Dist: pyyaml>=6.0
+Requires-Dist: shap>=0.44.0
+Provides-Extra: dev
+Requires-Dist: pytest>=8.0.0; extra == "dev"
+Requires-Dist: pytest-cov>=4.1.0; extra == "dev"
+Requires-Dist: ruff>=0.3.0; extra == "dev"
+Requires-Dist: mypy>=1.8.0; extra == "dev"
+Dynamic: license-file
+
+# 🛡️ Fraud Detection Enterprise Backend (`fraud_detection` v1.0.0)
+
+[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/)
+[![Code Coverage](https://img.shields.io/badge/coverage-93%25-brightgreen.svg)](tests/)
+[![Code Style: Ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
+
+An enterprise-grade, framework-agnostic Python backend package for real-time and batch financial transaction fraud inference, probability calibration, risk thresholding, and business explainability.
+
+---
+
+## 🏗️ Architecture & Pipeline Flow
+
+```text
+Client Application / Future API Layer
+                 │
+                 ▼
+          PredictionEngine (Facade)
+                 │
+                 ▼
+         PredictionService (Orchestrator)
+                 │
+ ┌───────────────┼───────────────┬───────────────┬───────────────┬───────────────┐
+ │               │               │               │               │               │
+ ▼               ▼               ▼               ▼               ▼               ▼
+Feature      Production       CatBoost        Isotonic        Threshold       Explainability
+Validator    Preprocessor     Champion        Calibrator       Engine          Engine
+(Schema Check) (Impute/Scale) (Raw Score)    (Posterior Prob) (Risk Tiers)    (SHAP Drivers)
+ │               │               │               │               │               │
+ └───────────────┴───────────────┼───────────────┴───────────────┴───────────────┘
+                                 ▼
+                         PredictionBuilder
+                                 │
+                                 ▼
+                         PredictionSession (Typed Response)
+```
+
+---
+
+## 🏛️ Model Registry & Asset Structure
+
+```text
+models/
+├── registry.json                    # Active production model pointer
+└── champion/
+    ├── model_v1.joblib              # Tuned CatBoost Classifier binary
+    ├── preprocessing_v1.joblib      # Scikit-Learn ColumnTransformer pipeline
+    ├── calibrator_v1.joblib         # Isotonic CalibratedClassifierCV binary
+    ├── threshold_v1.json            # Business-cost optimized decision threshold (0.26)
+    ├── metadata_v1.json             # Model version & evaluation registry metadata
+    ├── feature_schema_v1.json       # Expected 78 raw input features schema
+    └── feature_order_v1.json        # Expected 61 processed feature vector order
+```
+
+---
+
+## ⚡ Inference Performance Benchmarks
+
+*Note: On the local development environment, batch inference over 1,000 transactions completed in approximately 36 ms, illustrating the efficiency of vectorized inference.*
+
+| Batch Size | Total Latency (ms) | Per-Transaction Latency (ms) | Mode / Explanations |
+| :---: | :---: | :---: | :--- |
+| **1** | `159.00 ms` | `159.00 ms` | Real-time + Full SHAP Investigator Card |
+| **10** | `31.68 ms` | `3.17 ms` | Vectorized Batch + SHAP Explanations |
+| **100** | `41.54 ms` | `0.42 ms` | Vectorized Batch + SHAP Explanations |
+| **1,000** | `36.55 ms` | `0.04 ms` | Fast Vectorized Batch (Explanations Bypassed) |
+
+---
+
+## 🚀 Quickstart & Usage
+
+```python
+from fraud_detection import EngineFactory, PredictionEngine
+
+# 1. Initialize engine using explicit dependency factory
+engine: PredictionEngine = EngineFactory.create()
+
+# 2. Real-time Single Transaction Inference
+transaction = {
+    "Amount_Paid": 500.0,
+    "Amount_Received": 500.0,
+    "is_amount_outlier": 0.0,
+    # ... remaining raw transaction fields
+}
+
+response = engine.predict(transaction)
+print(f"Request ID: {response.request_id}")
+print(f"Decision: {response.decision}")             # e.g. APPROVED_WITH_MONITORING
+print(f"Risk Level: {response.risk_level}")           # e.g. RiskLevel.MEDIUM
+print(f"Calibrated Prob: {response.calibrated_probability:.4f}")
+print(f"Top Risk Driver: {response.top_risk_drivers[0]['feature']}")
+
+# 3. Vectorized Batch Inference
+sessions = engine.predict_batch(batch_df, include_explanations=False)
+print(f"Processed {len(sessions)} batch predictions.")
+```
+
+---
+
+## 🧪 Testing & Quality Assurance
+
+```bash
+# Run unit & integration test suite with coverage report
+pytest tests/unit/ tests/integration/ --cov=src/fraud_detection --cov-report=term-missing
+```
+
+---
+
+## 🏛️ Enterprise Production Roadmap & Design Trade-offs
+
+To ensure zero-friction local evaluation without external cloud dependencies (PostgreSQL clusters, Redis brokers, Auth0 tenants), local defaults were intentionally simplified:
+
+| Component | Portfolio Implementation | Enterprise Production Status |
+| :--- | :--- | :--- |
+| **Authentication & AuthZ** | OAuth2 Bearer Token + JWT + RBAC + API Keys | ✅ Integrated (`backend/app/middleware/auth.py`) |
+| **Rate Limiting** | Distributed Redis ZSET Token-Bucket + Local Fallback | ✅ Integrated (`backend/app/middleware/rate_limit.py`) |
+| **Infrastructure / Orchestration**| Automated GitHub Actions CI/CD + Kubernetes HPA Helm Charts | ✅ Integrated (`.github/workflows/ci-cd.yml`, `deployment/k8s/`) |
+| **Persistence Tier** | Async SQLAlchemy + PostgreSQL / SQLite Pooling | ✅ Integrated (`backend/app/db/session.py`) |
+| **Audit Logging** | Immutable append-only audit log stream | ✅ Integrated (`src/fraud_detection/history/`) |
+| **Model Registry** | Versioned artifact schema + SHA256 integrity validation | ✅ Integrated (`models/champion/`, `models/registry.json`) |
+| **Observability** | Prometheus Metrics + Kolmogorov-Smirnov Data Drift Monitor | ✅ Integrated (`src/fraud_detection/monitoring/`) |
+
+---
+
+## ⌨️ Analyst Keyboard Shortcuts
+
+In the live Queue Triage workbench (`/queue`), compliance analysts can use high-velocity hotkeys for rapid transaction review:
+
+* `J` / `K` — Navigate focus highlight down / up the transaction queue table
+* `Enter` — Open deep case investigation for the active transaction
+* `A` — Approve transaction (`APPROVED`)
+* `D` — Decline transaction (`DECLINED`)
+* `M` — Flag transaction for ongoing monitoring (`APPROVED_WITH_MONITORING`)
+* `?` — Toggle keyboard shortcuts reference modal

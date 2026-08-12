@@ -1,0 +1,8 @@
+experiment_id,timestamp,model_name,git_commit,pr_auc,roc_auc,f1_score,recall,precision,optimal_threshold,duration_sec,hyperparameters
+exp_v8,2026-08-05 21:53:38,catboost_Tuned,v8,0.8365,0.881,0.8182,0.72,0.9474,0.21,16.23,{'optimal_threshold': 0.21}
+exp_v10,2026-08-05 21:54:24,catboost_Tuned,v10,0.8506,0.8902,0.8372,0.72,1.0,0.26,27.48,{'optimal_threshold': 0.26}
+exp_v11,2026-08-05 22:10:47,catboost_Tuned,v11,0.8506,0.8902,0.8372,0.72,1.0,0.26,64.06,{'optimal_threshold': 0.26}
+exp_v13,2026-08-05 22:15:46,catboost_Tuned,v13,0.8506,0.8902,0.8372,0.72,1.0,0.26,29.33,{'optimal_threshold': 0.26}
+exp_v14,2026-08-05 22:17:02,catboost_Tuned,v14,0.8486,0.8846,0.8261,0.76,0.9048,0.34,46.03,{'optimal_threshold': 0.34}
+exp_v15,2026-08-05 22:44:24,catboost_Tuned,v15,0.8312,0.8854,0.8085,0.76,0.8636,0.26,0.04,{'optimal_threshold': 0.26}
+exp_v16,2026-08-05 23:00:30,catboost_Tuned,v16,0.8312,0.8854,0.8085,0.76,0.8636,0.26,0.03,{'optimal_threshold': 0.26}
