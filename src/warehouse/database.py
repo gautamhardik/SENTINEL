@@ -1,11 +1,14 @@
 """
 Centralized Warehouse Configuration & Database Engine Manager.
 """
+import logging
 import os
 from pathlib import Path
 from typing import Any, Optional
 
 import duckdb
+
+logger = logging.getLogger("WarehouseConnection")
 
 # Environment Settings
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -87,23 +90,29 @@ class WarehouseConnection:
         if self.engine_type == "postgresql":
             import psycopg2
             try:
-                self.conn = psycopg2.connect(
-                    host=POSTGRES_HOST,
-                    port=POSTGRES_PORT,
-                    dbname=POSTGRES_DB,
-                    user=POSTGRES_USER,
-                    password=POSTGRES_PASSWORD,
-                    connect_timeout=3
-                )
+                db_url = os.getenv("DATABASE_URL", None)
+                if db_url and ("neon.tech" in db_url or "sslmode=" in db_url or "postgres://" in db_url or "postgresql://" in db_url):
+                    self.conn = psycopg2.connect(db_url, connect_timeout=10)
+                else:
+                    self.conn = psycopg2.connect(
+                        host=os.getenv("POSTGRES_HOST", POSTGRES_HOST),
+                        port=int(os.getenv("POSTGRES_PORT", str(POSTGRES_PORT))),
+                        dbname=os.getenv("POSTGRES_DB", POSTGRES_DB),
+                        user=os.getenv("POSTGRES_USER", POSTGRES_USER),
+                        password=os.getenv("POSTGRES_PASSWORD", POSTGRES_PASSWORD),
+                        sslmode=os.getenv("POSTGRES_SSLMODE", os.getenv("SSLMODE", "prefer")),
+                        connect_timeout=10
+                    )
                 return self.conn
             except Exception as e:
                 # If running locally outside Docker (POSTGRES_HOST == localhost), fall back to DuckDB for seamless local dev
+                current_host = os.getenv("POSTGRES_HOST", POSTGRES_HOST)
                 fallback_env = os.getenv("DB_FALLBACK_TO_DUCKDB", "true").lower() in ("true", "1", "yes")
-                is_local = POSTGRES_HOST in ("localhost", "127.0.0.1")
+                is_local = current_host in ("localhost", "127.0.0.1")
                 if fallback_env and is_local:
                     import logging
                     logging.getLogger("WarehouseConnection").warning(
-                        f"PostgreSQL connection at {POSTGRES_HOST}:{POSTGRES_PORT} failed ({e}). "
+                        f"PostgreSQL connection at {current_host} failed ({e}). "
                         f"Falling back to local DuckDB warehouse storage for seamless local operation."
                     )
                     self.engine_type = "duckdb"
