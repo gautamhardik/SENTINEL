@@ -38,6 +38,60 @@ class HistoryRepository:
         self._in_memory_df: Optional[pd.DataFrame] = None
         self.bootstrap_data = bootstrap_data
         self._init_db_and_data()
+        self._seed_benchmark_profiles_if_needed()
+
+    def _seed_benchmark_profiles_if_needed(self) -> None:
+        """Seeds benchmark account histories into DB if they do not already exist."""
+        benchmark_txs = pd.DataFrame([
+            # ACC_ROUTINE_101 low-risk clean history
+            {
+                "transaction_key": "TX_SEED_ROUTINE_01",
+                "Timestamp": "2026-08-13 10:00:00",
+                "From_Account": "ACC_ROUTINE_101",
+                "To_Account": "ACC_ROUTINE_102",
+                "From_Bank": "10",
+                "To_Bank": "10",
+                "Amount_Paid": 45.50,
+                "Amount_Received": 45.50,
+                "Payment_Format": "ACH Outbound",
+                "Payment_Currency": "USD",
+                "Receiving_Currency": "USD",
+                "is_laundering": 0
+            },
+            # ACC_HIGH_VAL_601 high risk seed chain
+            {
+                "transaction_key": "TX_SEED_HIGH_01",
+                "Timestamp": "2026-08-13 12:30:00",
+                "From_Account": "ACC_HIGH_VAL_601",
+                "To_Account": "ACC_HIGH_VAL_602",
+                "From_Bank": "10",
+                "To_Bank": "99",
+                "Amount_Paid": 75000.00,
+                "Amount_Received": 75000.00,
+                "Payment_Format": "Wire Transfer",
+                "Payment_Currency": "USD",
+                "Receiving_Currency": "USD",
+                "is_laundering": 1
+            },
+            {
+                "transaction_key": "TX_SEED_HIGH_02",
+                "Timestamp": "2026-08-13 12:40:00",
+                "From_Account": "ACC_HIGH_VAL_601",
+                "To_Account": "ACC_HIGH_VAL_602",
+                "From_Bank": "10",
+                "To_Bank": "99",
+                "Amount_Paid": 75000.00,
+                "Amount_Received": 75000.00,
+                "Payment_Format": "Wire Transfer",
+                "Payment_Currency": "USD",
+                "Receiving_Currency": "USD",
+                "is_laundering": 1
+            }
+        ])
+        try:
+            self.add_transactions(benchmark_txs)
+        except Exception as e:
+            logger.debug(f"Benchmark profile seeding warning: {e}")
 
     def _init_db_and_data(self) -> None:
         """Initializes persistent DB schema and optionally loads initial data bootstrap."""
