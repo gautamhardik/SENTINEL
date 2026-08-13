@@ -33,12 +33,8 @@ class FeatureValidator(BaseValidator):
         if is_engineered and self.feature_order:
             target_features = self.feature_order
         else:
-            # Check for essential raw transaction fields if full raw warehouse features aren't present
-            essential_raw = ["Amount_Paid", "From_Account", "To_Account"]
-            if all(c in df_cols_set for c in essential_raw):
-                target_features = [c for c in self.raw_features if c in df_cols_set]
-            else:
-                target_features = self.raw_features
+            # Always validate against raw_features for raw transaction payloads
+            target_features = self.raw_features
 
         # 1. Missing columns check
         missing_cols = [c for c in target_features if c not in df_cols_set]
