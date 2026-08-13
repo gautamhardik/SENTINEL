@@ -1,5 +1,5 @@
 # Production Dockerfile for Sentinel Risk Engine FastAPI Backend
-FROM python:3.11-slim as builder
+FROM python:3.11-slim AS builder
 
 WORKDIR /app
 
@@ -19,7 +19,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir uvicorn gunicorn
 
 # Production runtime stage
-FROM python:3.11-slim as runner
+FROM python:3.11-slim AS runner
 
 WORKDIR /app
 
@@ -39,7 +39,6 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 COPY src/ /app/src/
 COPY models/ /app/models/
 COPY configs/ /app/configs/
-COPY data/ /app/data/
 COPY pyproject.toml /app/
 
 # Set PYTHONPATH environment variable
