@@ -126,7 +126,7 @@ export const PRESET_SCENARIOS: ScenarioPreset[] = [
     badgeColor: 'bg-rose-100 text-rose-800 border-rose-300',
     payload: {
       From_Account: 'ACC_CRIT_SPIKE_701',
-      To_Account: 'ACC_CRIT_SPIKE_701',
+      To_Account: 'ACC_CRIT_SPIKE_702',
       From_Bank: '1231',
       To_Bank: '12',
       Amount_Paid: 500000.00,
