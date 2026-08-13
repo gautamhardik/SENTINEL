@@ -91,7 +91,7 @@ export default function Home() {
                 <p className="text-red-800 font-medium">{error}</p>
                 {(error.includes('503') || error.includes('500') || error.toLowerCase().includes('failed to fetch') || error.toLowerCase().includes('network')) && (
                   <p className="text-[11px] text-red-700 font-mono bg-red-100/60 p-2 rounded border border-red-200 mt-2">
-                    💡 Troubleshooting: Ensure backend API is active on port 8000. If running locally outside Docker, start PostgreSQL or launch backend with <span className="font-bold">DB_ENGINE_TYPE=duckdb</span>.
+                    💡 Troubleshooting: Ensure backend API is active and reachable. If running locally outside Docker, start PostgreSQL or launch backend with <span className="font-bold">DB_ENGINE_TYPE=duckdb</span>.
                   </p>
                 )}
                 <div className="mt-3">
