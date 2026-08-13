@@ -42,6 +42,14 @@ class ArtifactLoader:
                 with open(self.manager.reference_priors_path, "r", encoding="utf-8") as f:
                     reference_priors = json.load(f)
 
+            raw_features = feature_schema.get("raw_features")
+            if not raw_features:
+                raw_features = [
+                    "transaction_id", "Timestamp", "From_Account", "To_Account",
+                    "From_Bank", "To_Bank", "Amount_Paid", "Amount_Received",
+                    "Payment_Format", "Payment_Currency", "Receiving_Currency"
+                ]
+
             return {
                 "model": model,
                 "preprocessor": preprocessor,
@@ -51,7 +59,7 @@ class ArtifactLoader:
                 "feature_schema": feature_schema,
                 "feature_order": feature_order,
                 "reference_priors": reference_priors,
-                "raw_features": feature_schema.get("raw_features", [])
+                "raw_features": raw_features
             }
         except Exception as e:
             raise ArtifactNotFoundError(f"Error loading versioned assets from registry: {str(e)}")
