@@ -81,17 +81,22 @@ class PredictionService:
 
         local_df = transaction_df.copy()
 
-        # 0. Online Feature Engineering Stage (if raw payload provided)
+        # 0. Initial Raw Validation Stage
+        profiler.start_stage("validation")
+        val_res = self.validator.validate(local_df)
+        if not val_res.is_valid:
+            profiler.end_stage("validation")
+            error_msg = "; ".join(val_res.errors)
+            self.logger.error("Transaction validation failed", {"errors": val_res.errors, "request_id": request_id})
+            raise FeatureValidationError(f"Transaction validation failed: {error_msg}")
+        profiler.end_stage("validation")
+
+        # 1. Online Feature Engineering Stage (if raw payload provided)
         profiler.start_stage("feature_engineering")
         if self._needs_online_feature_engineering(local_df) and self.online_feature_service is not None:
             raw_record = local_df.to_dict(orient="records")[0]
             local_df = self.online_feature_service.build_features_single(raw_record)
         profiler.end_stage("feature_engineering")
-
-        # 1. Validation Stage
-        profiler.start_stage("validation")
-        val_res = self.validator.validate(local_df)
-        profiler.end_stage("validation")
 
         if not val_res.is_valid:
             error_msg = "; ".join(val_res.errors)
