@@ -8,28 +8,28 @@ import { RiskDriversCard } from '../components/RiskDriversCard';
 import { InvestigatorCard } from '../components/InvestigatorCard';
 import { TransactionPayload, PredictionResponse } from '../lib/types';
 import { predictTransaction } from '../lib/api';
+import { PRESET_SCENARIOS, getRandomScenario, createPayloadFromScenario, ScenarioPreset } from '../lib/scenarios';
 import { AlertCircle, RefreshCw } from 'lucide-react';
 
-const createDefaultPayload = (): TransactionPayload => ({
-  transaction_id: `TX-${Math.random().toString(36).substring(2, 8).toUpperCase()}${Math.floor(100 + Math.random() * 900)}`,
-  Timestamp: new Date().toISOString().substring(0, 19),
-  From_Account: 'ACC_1029',
-  To_Account: 'ACC_8841',
-  From_Bank: 'BANK_12',
-  To_Bank: 'BANK_45',
-  Amount_Paid: 12500.0,
-  Amount_Received: 12500.0,
-  Payment_Format: 'Wire Transfer',
-  Payment_Currency: 'USD',
-  Receiving_Currency: 'USD',
-});
-
 export default function Home() {
-  const [payload, setPayload] = useState<TransactionPayload>(createDefaultPayload);
+  const [currentScenario, setCurrentScenario] = useState<ScenarioPreset>(PRESET_SCENARIOS[0]);
+  const [payload, setPayload] = useState<TransactionPayload>(() => createPayloadFromScenario(PRESET_SCENARIOS[0]));
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [response, setResponse] = useState<PredictionResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const resultRef = useRef<HTMLDivElement | null>(null);
+
+  const handleSelectScenario = (scenario: ScenarioPreset) => {
+    setCurrentScenario(scenario);
+    setPayload(createPayloadFromScenario(scenario));
+    setResponse(null);
+    setError(null);
+  };
+
+  const handleRandomScenario = () => {
+    const nextScenario = getRandomScenario(currentScenario.id);
+    handleSelectScenario(nextScenario);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,9 +50,7 @@ export default function Home() {
   };
 
   const handleReset = () => {
-    setPayload(createDefaultPayload());
-    setResponse(null);
-    setError(null);
+    handleRandomScenario();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -76,6 +74,9 @@ export default function Home() {
           <TransactionForm
             payload={payload}
             setPayload={setPayload}
+            currentScenario={currentScenario}
+            onSelectScenario={handleSelectScenario}
+            onRandomScenario={handleRandomScenario}
             onSubmit={handleSubmit}
             isLoading={isLoading}
             onReset={handleReset}
@@ -108,7 +109,6 @@ export default function Home() {
             </div>
           )}
 
-
           {/* Results Viewport Anchor with Sticky Header Offset */}
           {response && (
             <div ref={resultRef} className="space-y-4 pt-2 scroll-mt-20 animate-in fade-in duration-200">
@@ -122,7 +122,7 @@ export default function Home() {
                   className="inline-flex items-center gap-1 text-xs font-bold text-slate-600 hover:text-slate-900 focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:outline-none rounded px-1"
                 >
                   <RefreshCw className="h-3.5 w-3.5" />
-                  <span>Assess Another Transaction</span>
+                  <span>Assess Another Random Scenario</span>
                 </button>
               </div>
 
