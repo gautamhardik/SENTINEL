@@ -196,7 +196,7 @@ open http://localhost:3000
 
 ## 📈 Concurrency & Performance Load Benchmarks
 
-Verified via progressive load testing script ([test_engine_overload.py](tests/test_engine_overload.py)):
+Verified via progressive load testing script ([test_postgres_load.py](tests/integration/test_postgres_load.py)):
 
 | Worker Pool Concurrency | Total Requests | Successful Requests | Failures | Throughput (req/s) | p50 Latency (ms) | p99 Latency (ms) |
 |---:|---:|---:|---:|---:|---:|---:|
