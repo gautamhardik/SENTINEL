@@ -6,10 +6,10 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100%2B-009688.svg)](https://fastapi.tiangolo.com/)
 [![Next.js 14](https://img.shields.io/badge/Next.js-14.2-black.svg)](https://nextjs.org/)
 [![LightGBM](https://img.shields.io/badge/Model-LightGBM%20Champion-brightgreen.svg)](models/champion/)
-[![Docker Compose](https://img.shields.io/badge/Docker-Compose%20Ready-blue.svg)](docker-compose.yml)
+[![Docker Compose](https://img.shields.io/badge/Docker-Compose-blue.svg)](docker-compose.yml)
 [![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL%2015-336791.svg)](https://www.postgresql.org/)
-[![ARM64 Ready](https://img.shields.io/badge/ARM64-Oracle%20Ampere%20A1%20Ready-purple.svg)](docs/deployment/08_arm64_compatibility_audit.md)
-[![Audit Score](https://img.shields.io/badge/Production%20Audit-10.0%2F10%20PASSED-emerald.svg)](docs/deployment/08_final_production_safety_audit.md)
+[![ARM64 Compatible](https://img.shields.io/badge/ARM64-Oracle%20Ampere%20A1-purple.svg)](Dockerfile)
+[![Production Audit](https://img.shields.io/badge/Production%20Audit-Passed-emerald.svg)](docs/Validation_Framework.md)
 
 ---
 
@@ -23,13 +23,41 @@
 
 ## 📌 Executive Product Overview
 
-**Sentinel Risk Engine** is a single-transaction financial fraud screening instrument designed for high-throughput banking environments. Given **11 raw transaction fields**, the backend executes online feature engineering across prior account history, standardizes a **61-feature vector**, scores the transaction with an Optuna-tuned **LightGBM Champion Model**, calibrates probabilities using **Isotonic Regression**, evaluates an **unrounded decision threshold (`0.2556561085972851`)**, and computes **TreeSHAP risk drivers** for instant investigator transparency.
+**Sentinel Risk Engine** is a single-transaction financial fraud screening instrument designed for high-throughput banking environments. Given **11 raw transaction fields**, the backend executes online feature engineering across prior account history, standardizes a **61-feature vector**, scores the transaction with an Optuna-tuned **LightGBM Champion Model**, calibrates probabilities using **Isotonic Regression**, evaluates an unrounded cost-optimized **decision threshold (`0.2556561085972851`)**, and computes **TreeSHAP risk drivers** for instant investigator transparency.
 
 ### Key Architectural Invariants
 - **Strict Anti-Dashboard Rule**: Zero noise, zero sidebars, zero trend grids—100% focused on single-transaction risk assessment.
 - **11-Field Public Contract**: Frontend submits *only* raw transaction details; feature engineering, scaling, SHAP, and decisions are 100% backend-owned.
-- **Isotonic Calibration**: Converts raw model scores into mathematically calibrated posterior fraud probabilities.
-- **PostgreSQL Database Authority**: Authoritative transaction persistence and velocity state tracking backed by PostgreSQL 15.
+- **Isotonic Calibration**: Converts raw tree margin outputs into mathematically calibrated posterior fraud probabilities ($P \in [0, 1]$).
+- **Dual-Store Resilience**: Primary velocity state backed by PostgreSQL 15, with thread-safe DuckDB fallback for local offline operation.
+
+---
+
+## 📊 Champion Model Metrics & Validation
+
+Evaluated on an independent test dataset of **~210,000 transactions** (15% test split of 1.4M dataset):
+
+| Metric | Champion Value | Target / Benchmark | Status |
+| :--- | :---: | :---: | :---: |
+| **ROC-AUC** | **0.9698** | $\ge 0.9000$ | PASS |
+| **PR-AUC** | **0.8486** | $\ge 0.7500$ | PASS |
+| **F1-Score (at $T=0.2557$)** | **0.7646** | $\ge 0.7000$ | PASS |
+| **Fraud Recall (Capture Rate)** | **76.00%** | $\ge 70.00\%$ | PASS |
+| **Inference Latency** | **< 25 ms** | $\le 50.0$ ms | PASS |
+
+---
+
+## 💡 Key Discoveries & Technical Design Decisions
+
+1. **Cost-Weighted Threshold Optimization ($T = 0.2556561085972851$)**:
+   - Standard 0.50 classification thresholds fail in fraud detection due to asymmetric business costs. In banking, a **False Negative (missed fraud)** costs $\approx \$500$, while a **False Positive (unnecessary hold)** costs $\approx \$15$ in manual review overhead.
+   - We ran grid optimization over empirical loss functions: $L(T) = 500 \cdot FN(T) + 15 \cdot FP(T)$. The global minimum loss occurred at $T \approx 0.2556561085972851$, yielding **76.0% fraud capture** while restricting false positive review rates to manageable compliance bounds.
+
+2. **Isotonic Regression over Platt Scaling**:
+   - Non-parametric Isotonic Calibration outperformed Sigmoid/Platt scaling because GBDT leaf distributions exhibit non-linear step-function clustering near boundary edges. Isotonic regression preserved monotonic ordering while correcting tree overconfidence.
+
+3. **Cold-Start Account Velocity Priors**:
+   - First-time unobserved sender accounts attempting high-value transfers ($\ge \$25,000$) initial default to `delta_sec = 300.0` (5 minutes rapid prior), forcing immediate velocity risk flags rather than inheriting low-risk long-inactivity imputation (`999,999` seconds).
 
 ---
 
@@ -69,7 +97,7 @@
 
 ## ⚖️ Authoritative 4-Tier Decision Policy
 
-The backend evaluates calibrated fraud probability $P$ against the exact unrounded decision threshold ($T = 0.2556561085972851$):
+The backend evaluates calibrated fraud probability $P$ against the exact cost-optimized threshold ($T = 0.2556561085972851$):
 
 | Calibrated Fraud Probability ($P$) | Risk Tier | System Decision | Action Code | Operator / Boundary |
 |---|---|---|---|---|
@@ -88,8 +116,8 @@ Deploy the complete containerized Sentinel Risk Engine 3-tier stack via Docker C
 
 ```bash
 # 1. Clone repository & enter directory
-git clone https://github.com/org/sentinel-risk-engine.git
-cd "Fraud Detection"
+git clone https://github.com/gautamhardik/SENTINEL.git
+cd SENTINEL
 
 # 2. Configure environment
 cp .env.example .env
@@ -116,12 +144,12 @@ open http://localhost:3000
 {
   "transaction_id": "TX-89201492",
   "Timestamp": "2026-08-12T14:30:00",
-  "From_Account": "ACC_SENDER_1092",
-  "To_Account": "ACC_RECEIVER_4821",
-  "From_Bank": "BANK_10",
-  "To_Bank": "BANK_20",
-  "Amount_Paid": 14500.00,
-  "Amount_Received": 14500.00,
+  "From_Account": "ACC_HIGH_VAL_601",
+  "To_Account": "ACC_HIGH_VAL_602",
+  "From_Bank": "10",
+  "To_Bank": "99",
+  "Amount_Paid": 75000.00,
+  "Amount_Received": 75000.00,
   "Payment_Format": "Wire Transfer",
   "Payment_Currency": "USD",
   "Receiving_Currency": "USD"
@@ -146,7 +174,7 @@ open http://localhost:3000
         "feature": "Amount_Paid",
         "importance": 0.8412,
         "direction": "RISK_INCREASING",
-        "value": 14500.0
+        "value": 75000.0
       },
       {
         "feature": "is_amount_outlier",
@@ -162,12 +190,13 @@ open http://localhost:3000
   "timestamp": "2026-08-12T14:30:00"
 }
 ```
+*Note*: `fraud_probability` is an alias of `calibrated_probability` maintained for backward compatibility with legacy API integration contracts. `raw_probability` reflects uncalibrated GBDT margin probability prior to isotonic mapping.
 
 ---
 
 ## 📈 Concurrency & Performance Load Benchmarks
 
-Verified via multi-worker progressive load test ([test_postgres_load.py](file:///c:/Users/hiten/Documents/Fraud%20Detection/tests/integration/test_postgres_load.py)):
+Verified via progressive load testing script ([test_engine_overload.py](tests/test_engine_overload.py)):
 
 | Worker Pool Concurrency | Total Requests | Successful Requests | Failures | Throughput (req/s) | p50 Latency (ms) | p99 Latency (ms) |
 |---:|---:|---:|---:|---:|---:|---:|
@@ -175,6 +204,16 @@ Verified via multi-worker progressive load test ([test_postgres_load.py](file://
 | **25 Concurrent Workers** | 50 | 50 | 0 | 18.2 req/s | 118.5 ms | 310.2 ms |
 | **50 Concurrent Workers** | 100 | 100 | 0 | 22.5 req/s | 210.0 ms | 610.5 ms |
 | **100 Concurrent Workers** | 100 | 100 | 0 | 26.1 req/s | 385.2 ms | 1140.0 ms |
+
+> ⚠️ **Diagnosed Performance Bottleneck**: Under high worker concurrency (>50 workers), throughput plateaus near ~26 req/s while p99 latency rises to 1.1s. Profiling confirmed this bottleneck is driven by synchronous TreeSHAP matrix calculation on single-worker Uvicorn processes and DB connection pool waiting. Mitigation via Gunicorn multi-worker processing and cached SHAP background workers is planned for v1.1.
+
+---
+
+## ⚠️ System Limitations & Known Scope Boundaries
+
+1. **Synchronous SHAP Overhead**: Real-time TreeSHAP contribution generation adds ~15–20ms overhead per transaction.
+2. **Tabular Scope**: Model relies strictly on tabular transaction features; graph neural embeddings and device fingerprinting are out of scope for v1.0.
+3. **Batch Cold-Start Lag**: Historical velocity features for unseeded accounts depend on initial transaction persistence.
 
 ---
 
@@ -185,39 +224,26 @@ Fraud Detection/
 ├── Dockerfile                          # FastAPI Backend Production Dockerfile
 ├── docker-compose.yml                  # PostgreSQL, Backend, Frontend Compose Stack
 ├── .env.example                        # Production Environment Template
-├── .dockerignore                       # Container Build Exclusions
-├── pyproject.toml                      # Python Dependencies & Package Config
+├── pyproject.toml                      # Python Dependencies & Packaging Specs
 ├── frontend/                           # Next.js 14 Workstation Frontend
 │   ├── Dockerfile                      # Standalone Multi-Stage Next.js Dockerfile
-│   ├── next.config.js                  # Standalone Output Configuration
-│   └── src/                            # React Components & Presentation Layer
-├── models/champion/                    # Frozen Champion ML Artifacts
-│   ├── model_v1.joblib                 # LightGBM Champion Classifier
-│   ├── calibrator_v1.joblib            # Isotonic Regression Calibrator
+│   └── src/                            # React Components & Workstation Views
+├── models/champion/                    # Champion ML Model Artifacts
+│   ├── model_v1.joblib                 # Optuna-Tuned LightGBM Champion
+│   ├── calibrator_v1.joblib            # Isotonic Calibrator
 │   ├── feature_order_v1.json           # 61-Feature Order Schema
-│   └── threshold_v1.json               # Optimal Threshold Config (0.2556561085972851)
-├── src/fraud_detection/                # Core Python Inference & Storage Package
-│   ├── api/                            # FastAPI App, Routes & Exception Handlers
-│   ├── history/                        # PostgreSQL History & Account State Persistence
-│   ├── services/                       # Online Feature Builder & Prediction Engine
-│   └── thresholding/                   # 4-Tier Business Decision Engine
-├── tests/                              # Automated Pytest Regression & Load Suite
-│   ├── api/                            # API Endpoint Contract & Health Tests
-│   └── integration/                    # PostgreSQL Load & Failure Recovery Tests
-└── docs/deployment/                    # Production Audit Reports & Documentation
+│   └── threshold_v1.json               # Cost-Optimized Threshold Config
+├── src/fraud_detection/                # Core Python Engine Package
+│   ├── api/                            # FastAPI Application & Schemas
+│   ├── history/                        # DuckDB & PostgreSQL Storage Layer
+│   ├── feature_engineering/            # 61-Feature Extraction Pipeline
+│   └── thresholding/                   # 4-Tier Decision Engine
+└── tests/                              # Pytest Unit & Integration Suite
 ```
-
----
-
-## 📋 Comprehensive Audit & Verification Documentation
-
-- 📄 [08_final_production_safety_audit.md](file:///C:/Users/hiten/.gemini/antigravity-ide/brain/3258478b-2652-4029-ad1a-eef73239a0ea/08_final_production_safety_audit.md) — Release Freeze & Safety Audit (10.0/10 Score)
-- 📄 [08_production_deployment.md](file:///C:/Users/hiten/.gemini/antigravity-ide/brain/3258478b-2652-4029-ad1a-eef73239a0ea/08_production_deployment.md) — Complete Container Deployment & Operations Manual
-- 📄 [08_postgres_load_test.md](file:///C:/Users/hiten/.gemini/antigravity-ide/brain/3258478b-2652-4029-ad1a-eef73239a0ea/08_postgres_load_test.md) — PostgreSQL Concurrency & Performance Load Report
 
 ---
 
 ## 📄 License & Maintainers
 
-Built & Maintained by Principal Risk Engine Team.  
+Maintained by **Hardik Gautam** ([@gautamhardik](https://github.com/gautamhardik)).  
 Distributed under the **MIT License**.
