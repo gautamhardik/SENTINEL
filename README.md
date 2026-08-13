@@ -1,6 +1,7 @@
 # 🛡️ SENTINEL RISK ENGINE
 ### Real-Time Financial Transaction Fraud Screening & Explainability Instrument
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-sentinelhg.vercel.app-indigo.svg)](https://sentinelhg.vercel.app/)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100%2B-009688.svg)](https://fastapi.tiangolo.com/)
 [![Next.js 14](https://img.shields.io/badge/Next.js-14.2-black.svg)](https://nextjs.org/)
@@ -10,6 +11,13 @@
 [![ARM64 Ready](https://img.shields.io/badge/ARM64-Oracle%20Ampere%20A1%20Ready-purple.svg)](docs/deployment/08_arm64_compatibility_audit.md)
 [![Audit Score](https://img.shields.io/badge/Production%20Audit-10.0%2F10%20PASSED-emerald.svg)](docs/deployment/08_final_production_safety_audit.md)
 
+---
+
+## 🖥️ Workstation Interface Showcase
+
+| Single-Transaction Risk Screening Form | Calibrated Risk Assessment & SHAP Drivers |
+| :---: | :---: |
+| ![Screening Form](docs/assets/hero_screening.png) | ![Risk Results & SHAP Drivers](docs/assets/risk_results.png) |
 
 ---
 
