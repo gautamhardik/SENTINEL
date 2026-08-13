@@ -39,6 +39,14 @@ class ArtifactManager:
         return path
 
     @property
+    def registry_path(self) -> Path:
+        return self.registry_pointer_path
+
+    @property
+    def model_dir(self) -> Path:
+        return self.champ_dir
+
+    @property
     def model_path(self) -> Path:
         return self.get_path("model")
 
