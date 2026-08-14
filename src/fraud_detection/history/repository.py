@@ -41,57 +41,60 @@ class HistoryRepository:
         self._seed_benchmark_profiles_if_needed()
 
     def _seed_benchmark_profiles_if_needed(self) -> None:
-        """Seeds benchmark account histories into DB if they do not already exist."""
-        benchmark_txs = pd.DataFrame([
-            # ACC_ROUTINE_101 low-risk clean history
-            {
-                "transaction_key": "TX_SEED_ROUTINE_01",
-                "Timestamp": "2026-08-13 10:00:00",
-                "From_Account": "ACC_ROUTINE_101",
-                "To_Account": "ACC_ROUTINE_102",
-                "From_Bank": "10",
-                "To_Bank": "10",
-                "Amount_Paid": 45.50,
-                "Amount_Received": 45.50,
-                "Payment_Format": "ACH Outbound",
-                "Payment_Currency": "USD",
-                "Receiving_Currency": "USD",
-                "is_laundering": 0
-            },
-            # ACC_HIGH_VAL_601 high risk seed chain
-            {
-                "transaction_key": "TX_SEED_HIGH_01",
-                "Timestamp": "2026-08-13 12:30:00",
-                "From_Account": "ACC_HIGH_VAL_601",
-                "To_Account": "ACC_HIGH_VAL_602",
-                "From_Bank": "10",
-                "To_Bank": "99",
-                "Amount_Paid": 75000.00,
-                "Amount_Received": 75000.00,
-                "Payment_Format": "Wire Transfer",
-                "Payment_Currency": "USD",
-                "Receiving_Currency": "USD",
-                "is_laundering": 1
-            },
-            {
-                "transaction_key": "TX_SEED_HIGH_02",
-                "Timestamp": "2026-08-13 12:40:00",
-                "From_Account": "ACC_HIGH_VAL_601",
-                "To_Account": "ACC_HIGH_VAL_602",
-                "From_Bank": "10",
-                "To_Bank": "99",
-                "Amount_Paid": 75000.00,
-                "Amount_Received": 75000.00,
-                "Payment_Format": "Wire Transfer",
-                "Payment_Currency": "USD",
-                "Receiving_Currency": "USD",
-                "is_laundering": 1
-            }
-        ])
+        """Seeds all demo scenario account histories with realistic velocity patterns.
+
+        Covers every account ID used in the frontend scenarios.ts preset scenarios.
+        Each tier gets transactions that match its expected risk profile:
+          - LOW accounts : spaced apart (low velocity), small amounts
+          - MEDIUM accounts : moderate amounts, cross-bank transfers
+          - HIGH accounts : rapid bursts, amounts above $10k outlier threshold
+          - CRITICAL accounts : extreme amounts, very short delta_sec intervals
+        """
+        base = "2026-08-13"
+        rows = [
+            # ── LOW: ACC_ROUTINE_101 → ACC_ROUTINE_102 (4 clean ACH, spread hours) ──
+            {"transaction_key": "TX_SEED_ROUTINE_01", "Timestamp": f"{base} 08:00:00", "From_Account": "ACC_ROUTINE_101", "To_Account": "ACC_ROUTINE_102", "From_Bank": "10", "To_Bank": "10", "Amount_Paid": 42.00, "Amount_Received": 42.00, "Payment_Format": "ACH Outbound", "Payment_Currency": "USD", "Receiving_Currency": "USD", "is_laundering": 0},
+            {"transaction_key": "TX_SEED_ROUTINE_02", "Timestamp": f"{base} 10:30:00", "From_Account": "ACC_ROUTINE_101", "To_Account": "ACC_ROUTINE_102", "From_Bank": "10", "To_Bank": "10", "Amount_Paid": 38.75, "Amount_Received": 38.75, "Payment_Format": "ACH Outbound", "Payment_Currency": "USD", "Receiving_Currency": "USD", "is_laundering": 0},
+            {"transaction_key": "TX_SEED_ROUTINE_03", "Timestamp": f"{base} 13:15:00", "From_Account": "ACC_ROUTINE_101", "To_Account": "ACC_ROUTINE_102", "From_Bank": "10", "To_Bank": "10", "Amount_Paid": 51.20, "Amount_Received": 51.20, "Payment_Format": "ACH Outbound", "Payment_Currency": "USD", "Receiving_Currency": "USD", "is_laundering": 0},
+            {"transaction_key": "TX_SEED_ROUTINE_04", "Timestamp": f"{base} 16:00:00", "From_Account": "ACC_ROUTINE_101", "To_Account": "ACC_ROUTINE_102", "From_Bank": "10", "To_Bank": "10", "Amount_Paid": 44.50, "Amount_Received": 44.50, "Payment_Format": "ACH Outbound", "Payment_Currency": "USD", "Receiving_Currency": "USD", "is_laundering": 0},
+
+            # ── LOW: ACC_GLOBAL_501 → ACC_GLOBAL_502 (small international wires) ──
+            {"transaction_key": "TX_SEED_GLOBAL_01", "Timestamp": f"{base} 09:00:00", "From_Account": "ACC_GLOBAL_501", "To_Account": "ACC_GLOBAL_502", "From_Bank": "10", "To_Bank": "10", "Amount_Paid": 220.00, "Amount_Received": 220.00, "Payment_Format": "Wire Transfer", "Payment_Currency": "USD", "Receiving_Currency": "EUR", "is_laundering": 0},
+            {"transaction_key": "TX_SEED_GLOBAL_02", "Timestamp": f"{base} 11:00:00", "From_Account": "ACC_GLOBAL_501", "To_Account": "ACC_GLOBAL_502", "From_Bank": "10", "To_Bank": "10", "Amount_Paid": 275.00, "Amount_Received": 275.00, "Payment_Format": "Wire Transfer", "Payment_Currency": "USD", "Receiving_Currency": "EUR", "is_laundering": 0},
+            {"transaction_key": "TX_SEED_GLOBAL_03", "Timestamp": f"{base} 14:30:00", "From_Account": "ACC_GLOBAL_501", "To_Account": "ACC_GLOBAL_502", "From_Bank": "10", "To_Bank": "10", "Amount_Paid": 195.00, "Amount_Received": 195.00, "Payment_Format": "Wire Transfer", "Payment_Currency": "USD", "Receiving_Currency": "EUR", "is_laundering": 0},
+
+            # ── MEDIUM: ACC_MED_RISK_201 → ACC_MED_RISK_202 (moderate cross-bank) ──
+            {"transaction_key": "TX_SEED_MED_01", "Timestamp": f"{base} 09:30:00", "From_Account": "ACC_MED_RISK_201", "To_Account": "ACC_MED_RISK_202", "From_Bank": "10", "To_Bank": "15", "Amount_Paid": 11000.00, "Amount_Received": 11000.00, "Payment_Format": "Wire Transfer", "Payment_Currency": "USD", "Receiving_Currency": "USD", "is_laundering": 0},
+            {"transaction_key": "TX_SEED_MED_02", "Timestamp": f"{base} 10:15:00", "From_Account": "ACC_MED_RISK_201", "To_Account": "ACC_MED_RISK_202", "From_Bank": "10", "To_Bank": "20", "Amount_Paid": 13500.00, "Amount_Received": 13500.00, "Payment_Format": "Wire Transfer", "Payment_Currency": "USD", "Receiving_Currency": "USD", "is_laundering": 0},
+            {"transaction_key": "TX_SEED_MED_03", "Timestamp": f"{base} 11:00:00", "From_Account": "ACC_MED_RISK_201", "To_Account": "ACC_MED_RISK_202", "From_Bank": "10", "To_Bank": "15", "Amount_Paid": 9800.00,  "Amount_Received": 9800.00,  "Payment_Format": "Wire Transfer", "Payment_Currency": "USD", "Receiving_Currency": "USD", "is_laundering": 0},
+            {"transaction_key": "TX_SEED_MED_04", "Timestamp": f"{base} 11:30:00", "From_Account": "ACC_MED_RISK_201", "To_Account": "ACC_MED_RISK_202", "From_Bank": "10", "To_Bank": "20", "Amount_Paid": 14200.00, "Amount_Received": 14200.00, "Payment_Format": "Wire Transfer", "Payment_Currency": "USD", "Receiving_Currency": "USD", "is_laundering": 0},
+
+            # ── HIGH: ACC_SUSP_401 → ACC_SUSP_402 (rapid bursts to Bank 888) ──
+            {"transaction_key": "TX_SEED_SUSP_01", "Timestamp": f"{base} 12:00:00", "From_Account": "ACC_SUSP_401", "To_Account": "ACC_SUSP_402", "From_Bank": "10", "To_Bank": "888", "Amount_Paid": 22000.00, "Amount_Received": 22000.00, "Payment_Format": "Wire Transfer", "Payment_Currency": "USD", "Receiving_Currency": "USD", "is_laundering": 1},
+            {"transaction_key": "TX_SEED_SUSP_02", "Timestamp": f"{base} 12:03:00", "From_Account": "ACC_SUSP_401", "To_Account": "ACC_SUSP_402", "From_Bank": "10", "To_Bank": "888", "Amount_Paid": 24000.00, "Amount_Received": 24000.00, "Payment_Format": "Wire Transfer", "Payment_Currency": "USD", "Receiving_Currency": "USD", "is_laundering": 1},
+            {"transaction_key": "TX_SEED_SUSP_03", "Timestamp": f"{base} 12:05:00", "From_Account": "ACC_SUSP_401", "To_Account": "ACC_SUSP_402", "From_Bank": "10", "To_Bank": "888", "Amount_Paid": 28000.00, "Amount_Received": 28000.00, "Payment_Format": "Wire Transfer", "Payment_Currency": "USD", "Receiving_Currency": "USD", "is_laundering": 1},
+            {"transaction_key": "TX_SEED_SUSP_04", "Timestamp": f"{base} 12:08:00", "From_Account": "ACC_SUSP_401", "To_Account": "ACC_SUSP_402", "From_Bank": "10", "To_Bank": "888", "Amount_Paid": 26500.00, "Amount_Received": 26500.00, "Payment_Format": "Wire Transfer", "Payment_Currency": "USD", "Receiving_Currency": "USD", "is_laundering": 1},
+
+            # ── HIGH/CRITICAL: acct_clean_1 → acct_clean_2 (escalating large wires) ──
+            {"transaction_key": "TX_SEED_CLEAN_01", "Timestamp": f"{base} 12:30:00", "From_Account": "acct_clean_1", "To_Account": "acct_clean_2", "From_Bank": "10", "To_Bank": "1231", "Amount_Paid": 28000.00,  "Amount_Received": 28000.00,  "Payment_Format": "Wire Transfer", "Payment_Currency": "USD", "Receiving_Currency": "USD", "is_laundering": 1},
+            {"transaction_key": "TX_SEED_CLEAN_02", "Timestamp": f"{base} 12:32:00", "From_Account": "acct_clean_1", "To_Account": "acct_clean_2", "From_Bank": "10", "To_Bank": "888",  "Amount_Paid": 55000.00,  "Amount_Received": 55000.00,  "Payment_Format": "Wire Transfer", "Payment_Currency": "USD", "Receiving_Currency": "EUR", "is_laundering": 1},
+            {"transaction_key": "TX_SEED_CLEAN_03", "Timestamp": f"{base} 12:33:30", "From_Account": "acct_clean_1", "To_Account": "acct_clean_2", "From_Bank": "10", "To_Bank": "888",  "Amount_Paid": 80000.00,  "Amount_Received": 80000.00,  "Payment_Format": "Wire Transfer", "Payment_Currency": "USD", "Receiving_Currency": "EUR", "is_laundering": 1},
+            {"transaction_key": "TX_SEED_CLEAN_04", "Timestamp": f"{base} 12:34:30", "From_Account": "acct_clean_1", "To_Account": "acct_clean_2", "From_Bank": "10", "To_Bank": "888",  "Amount_Paid": 120000.00, "Amount_Received": 120000.00, "Payment_Format": "Wire Transfer", "Payment_Currency": "USD", "Receiving_Currency": "EUR", "is_laundering": 1},
+            {"transaction_key": "TX_SEED_CLEAN_05", "Timestamp": f"{base} 12:35:00", "From_Account": "acct_clean_1", "To_Account": "acct_clean_2", "From_Bank": "10", "To_Bank": "888",  "Amount_Paid": 145000.00, "Amount_Received": 145000.00, "Payment_Format": "Wire Transfer", "Payment_Currency": "USD", "Receiving_Currency": "EUR", "is_laundering": 1},
+
+            # ── ACC_HIGH_VAL_601 (legacy API example accounts) ──
+            {"transaction_key": "TX_SEED_HV_01", "Timestamp": f"{base} 13:00:00", "From_Account": "ACC_HIGH_VAL_601", "To_Account": "ACC_HIGH_VAL_602", "From_Bank": "10", "To_Bank": "99", "Amount_Paid": 72000.00, "Amount_Received": 72000.00, "Payment_Format": "Wire Transfer", "Payment_Currency": "USD", "Receiving_Currency": "USD", "is_laundering": 1},
+            {"transaction_key": "TX_SEED_HV_02", "Timestamp": f"{base} 13:02:00", "From_Account": "ACC_HIGH_VAL_601", "To_Account": "ACC_HIGH_VAL_602", "From_Bank": "10", "To_Bank": "99", "Amount_Paid": 75000.00, "Amount_Received": 75000.00, "Payment_Format": "Wire Transfer", "Payment_Currency": "USD", "Receiving_Currency": "USD", "is_laundering": 1},
+            {"transaction_key": "TX_SEED_HV_03", "Timestamp": f"{base} 13:04:30", "From_Account": "ACC_HIGH_VAL_601", "To_Account": "ACC_HIGH_VAL_602", "From_Bank": "10", "To_Bank": "99", "Amount_Paid": 78000.00, "Amount_Received": 78000.00, "Payment_Format": "Wire Transfer", "Payment_Currency": "USD", "Receiving_Currency": "USD", "is_laundering": 1},
+        ]
+        benchmark_txs = pd.DataFrame(rows)
         try:
             self.add_transactions(benchmark_txs)
+            logger.info(f"Demo profile seed: {len(rows)} transactions seeded for {len(set(r['From_Account'] for r in rows))} accounts.")
         except Exception as e:
             logger.debug(f"Benchmark profile seeding warning: {e}")
+
+
 
     def _init_db_and_data(self) -> None:
         """Initializes persistent DB schema and optionally loads initial data bootstrap."""

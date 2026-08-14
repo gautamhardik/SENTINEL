@@ -1,7 +1,7 @@
 """
 Pydantic Request and Response Schemas for Production Fraud Detection API.
 """
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Set
 from pydantic import BaseModel, Field, field_validator
 
 
@@ -25,6 +25,26 @@ class PredictionRequest(BaseModel):
         if not v or not v.strip():
             raise ValueError(f"{info.field_name} must be a non-empty string")
         return v.strip()
+
+    @field_validator("Payment_Format")
+    @classmethod
+    def validate_payment_format(cls, v: str) -> str:
+        allowed: Set[str] = {"Wire Transfer", "ACH Outbound", "Cheque", "Credit Card", "Cash Deposit"}
+        if v not in allowed:
+            raise ValueError(
+                f"Invalid Payment_Format '{v}'. Allowed values: {sorted(allowed)}"
+            )
+        return v
+
+    @field_validator("Payment_Currency", "Receiving_Currency")
+    @classmethod
+    def validate_currency(cls, v: str, info) -> str:
+        allowed: Set[str] = {"USD", "EUR", "GBP", "CAD", "AUD"}
+        if v not in allowed:
+            raise ValueError(
+                f"Invalid {info.field_name} '{v}'. Allowed values: {sorted(allowed)}"
+            )
+        return v
 
     @field_validator("Timestamp")
     @classmethod
