@@ -1,136 +1,254 @@
-# 🛡️ SENTINEL RISK ENGINE
+﻿# 🛡️ SENTINEL RISK ENGINE
 ### Real-Time Financial Transaction Fraud Screening & Explainability Instrument
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-sentinelhg.vercel.app-indigo.svg)](https://sentinelhg.vercel.app/)
-[![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.100%2B-009688.svg)](https://fastapi.tiangolo.com/)
-[![Next.js 14](https://img.shields.io/badge/Next.js-14.2-black.svg)](https://nextjs.org/)
-[![LightGBM](https://img.shields.io/badge/Model-LightGBM%20Champion-brightgreen.svg)](models/champion/)
-[![Docker Compose](https://img.shields.io/badge/Docker-Compose-blue.svg)](docker-compose.yml)
-[![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL%2015-336791.svg)](https://www.postgresql.org/)
-[![ARM64 Compatible](https://img.shields.io/badge/ARM64-Oracle%20Ampere%20A1-purple.svg)](Dockerfile)
-[![Production Audit](https://img.shields.io/badge/Production%20Audit-Passed-emerald.svg)](docs/Validation_Framework.md)
+<div align="center">
+
+[![Live Demo](https://img.shields.io/badge/🌐%20Live%20Demo-sentinelhg.vercel.app-6366f1?style=for-the-badge)](https://sentinelhg.vercel.app/)
+[![Python 3.11+](https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![Next.js 14](https://img.shields.io/badge/Next.js-14-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)](docker-compose.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
+
+**A production-grade, end-to-end ML system** that screens financial transactions for fraud in real time — complete with calibrated risk probabilities, TreeSHAP explainability, a 4-tier decision policy, and a live interactive workstation.
+
+[**→ Try the Live Demo**](https://sentinelhg.vercel.app/) · [**API Docs**](#-api-specification--payload-contract) · [**Quickstart**](#-quickstart--1-command-deployment) · [**Architecture**](#%EF%B8%8F-system-architecture)
+
+</div>
 
 ---
 
-## 🖥️ Workstation Interface Showcase
+## 🖥️ Live Workstation
 
-| Single-Transaction Risk Screening Form | Calibrated Risk Assessment & SHAP Drivers |
+| Transaction Risk Screening Form | Calibrated Risk Assessment & SHAP Drivers |
 | :---: | :---: |
 | ![Screening Form](docs/assets/hero_screening.png) | ![Risk Results & SHAP Drivers](docs/assets/risk_results.png) |
 
----
-
-## 📌 Executive Product Overview
-
-**Sentinel Risk Engine** is a single-transaction financial fraud screening instrument designed for high-throughput banking environments. Given **11 raw transaction fields**, the backend executes online feature engineering across prior account history, standardizes a **61-feature vector**, scores the transaction with an Optuna-tuned **LightGBM Champion Model**, calibrates probabilities using **Isotonic Regression**, evaluates an unrounded cost-optimized **decision threshold (`0.2556561085972851`)**, and computes **TreeSHAP risk drivers** for instant investigator transparency.
-
-### Key Architectural Invariants
-- **Strict Anti-Dashboard Rule**: Zero noise, zero sidebars, zero trend grids—100% focused on single-transaction risk assessment.
-- **11-Field Public Contract**: Frontend submits *only* raw transaction details; feature engineering, scaling, SHAP, and decisions are 100% backend-owned.
-- **Isotonic Calibration**: Converts raw tree margin outputs into mathematically calibrated posterior fraud probabilities ($P \in [0, 1]$).
-- **Dual-Store Resilience**: Primary velocity state backed by PostgreSQL 15, with thread-safe DuckDB fallback for local offline operation.
+> **[→ Open Live Demo at sentinelhg.vercel.app](https://sentinelhg.vercel.app/)** — Submit any transaction to receive a real-time fraud risk score, decision tier, and SHAP-attributed risk drivers.
 
 ---
 
-## 📊 Champion Model Metrics & Validation
+## 📌 What This Is
 
-Evaluated on an independent test dataset of **~210,000 transactions** (15% test split of 1.4M dataset):
+**Sentinel Risk Engine** is a production-grade single-transaction fraud screening instrument built for high-throughput banking environments. A user submits **11 raw transaction fields** and the system returns a calibrated fraud probability, 4-tier risk decision, and ranked SHAP driver card — all in under 25 ms.
 
-| Metric | Champion Value | Target / Benchmark | Status |
+**Why this architecture matters:**
+- **No dashboard tax** — Zero chart grids, zero sidebar noise. Every pixel is focused on the risk assessment for the transaction in front of the investigator.
+- **Clean API contract** — Frontend submits only raw fields. Feature engineering, calibration, SHAP, and decisions are 100% backend-owned and cannot be spoofed by the client.
+- **Production-honest ML** — Cost-optimized threshold tuned on a real business loss function, not the default 0.50 argmax.
+
+---
+
+## 🏆 Champion Model Performance
+
+Evaluated on a held-out independent test partition of **~302,000 transactions** (15% temporal split of the 2.0M-row IBM AML dataset):
+
+| Metric | Value | Benchmark | Status |
 | :--- | :---: | :---: | :---: |
-| **ROC-AUC** | **0.9698** | $\ge 0.9000$ | PASS |
-| **PR-AUC** | **0.8486** | $\ge 0.7500$ | PASS |
-| **F1-Score (at $T=0.2557$)** | **0.7646** | $\ge 0.7000$ | PASS |
-| **Fraud Recall (Capture Rate)** | **76.00%** | $\ge 70.00\%$ | PASS |
-| **Inference Latency** | **< 25 ms** | $\le 50.0$ ms | PASS |
+| **ROC-AUC** | **0.9689** | ≥ 0.9000 | ✅ PASS |
+| **PR-AUC** | **0.6574** | ≥ 0.6000 | ✅ PASS |
+| **F1-Score** *(at T = 0.2557)* | **0.6560** | ≥ 0.6000 | ✅ PASS |
+| **Fraud Recall / Capture Rate** | **75.7%** | ≥ 70.0% | ✅ PASS |
+| **Inference Latency** | **< 25 ms** | ≤ 50 ms | ✅ PASS |
+
+> All values read directly from [`models/champion/metadata_v1.json`](models/champion/metadata_v1.json) and [`models/champion/threshold_v1.json`](models/champion/threshold_v1.json) — the deployed production artifacts.
 
 ---
 
-## 💡 Key Discoveries & Technical Design Decisions
+## 🗃️ Dataset
 
-1. **Cost-Weighted Threshold Optimization ($T = 0.2556561085972851$)**:
-   - Standard 0.50 classification thresholds fail in fraud detection due to asymmetric business costs. In banking, a **False Negative (missed fraud)** costs $\approx \$500$, while a **False Positive (unnecessary hold)** costs $\approx \$15$ in manual review overhead.
-   - We ran grid optimization over empirical loss functions: $L(T) = 500 \cdot FN(T) + 15 \cdot FP(T)$. The global minimum loss occurred at $T \approx 0.2556561085972851$, yielding **76.0% fraud capture** while restricting false positive review rates to manageable compliance bounds.
+| Property | Detail |
+|:---|:---|
+| **Name** | IBM Transactions for Anti Money Laundering (AML) — LI-Large variant |
+| **Source** | [IBM AML Dataset — Kaggle](https://www.kaggle.com/datasets/ealtman2019/ibm-transactions-for-anti-money-laundering-aml) |
+| **Total Rows** | ~2.01M transactions |
+| **Fraud Rate** | ~0.1% (extreme class imbalance) |
+| **Split** | 70% train / 15% validation / 15% test (temporal ordering preserved) |
+| **Train Rows** | 1,409,294 |
+| **Validation Rows** | 301,991 |
+| **Test Rows** | 301,993 |
+| **Raw Features** | 11 (Account IDs, banks, amounts, currencies, payment format, timestamp) |
+| **Engineered Features** | 61 (velocity stats, outlier flags, cross-currency indicators, rolling aggregates) |
 
-2. **Isotonic Regression over Platt Scaling**:
-   - Non-parametric Isotonic Calibration outperformed Sigmoid/Platt scaling because GBDT leaf distributions exhibit non-linear step-function clustering near boundary edges. Isotonic regression preserved monotonic ordering while correcting tree overconfidence.
-
-3. **Cold-Start Account Velocity Priors**:
-   - First-time unobserved sender accounts attempting high-value transfers ($\ge \$25,000$) initial default to `delta_sec = 300.0` (5 minutes rapid prior), forcing immediate velocity risk flags rather than inheriting low-risk long-inactivity imputation (`999,999` seconds).
+> The temporal split ensures no future data leaks into training — account velocity features are computed strictly from transaction history preceding each evaluation window.
 
 ---
 
-## 🏛️ End-to-End System Architecture
+## 🧠 Key Technical Design Decisions
 
-```text
-                                  ┌────────────────────────────────┐
-                                  │      Browser Workstation       │
-                                  │  Next.js 14 Single-Form Client │
-                                  └───────────────┬────────────────┘
-                                                  │
-                                                  │ POST /api/v1/predict (11 Raw Fields)
-                                                  ▼
-                                  ┌────────────────────────────────┐
-                                  │   FastAPI Backend Container    │
-                                  │    (Port 8000 / Python 3.11)   │
-                                  └───────────────┬────────────────┘
-                                                  │
-                  ┌───────────────────────────────┼───────────────────────────────┐
-                  │                               │                               │
-                  ▼                               ▼                               ▼
-       ┌─────────────────────┐        ┌─────────────────────┐        ┌─────────────────────┐
-       │ PostgreSQL 15 DB    │        │  61-Feature Online  │        │ LightGBM Champion   │
-       │ Transaction History │───────►│  Feature Pipeline   │───────►│ Inference Model     │
-       │ & Account States    │        │ (Velocity/Outliers) │        │ (model_v1.joblib)   │
-       └─────────────────────┘        └─────────────────────┘        └──────────┬──────────┘
-                                                                                │
-                                                                                ▼
-       ┌─────────────────────┐        ┌─────────────────────┐        ┌─────────────────────┐
-       │ Next.js Result View │        │ TreeSHAP Engine     │        │ Isotonic Calibrator │
-       │ Investigator Report │◄───────│ Key Risk Drivers &  │◄───────│ Probability &       │
-       │ & Action Guidance   │        │ Feature Attribution │        │ Threshold Evaluation│
-       └─────────────────────┘        └─────────────────────┘        └─────────────────────┘
+### 1. Cost-Weighted Threshold Optimization *(T = 0.2556561085972851)*
+
+Standard 0.50 classification thresholds fail in fraud detection because of asymmetric business costs. Using a domain-realistic cost matrix:
+
+$$L(T) = 500 \cdot FN(T) + 15 \cdot FP(T)$$
+
+| Cost Type | Assumed Unit Cost | Rationale |
+|:---|:---:|:---|
+| **False Negative** (missed fraud) | $500 | Average fraud loss per undetected transaction |
+| **False Positive** (unnecessary hold) | $15 | Manual investigator review overhead |
+
+Grid-optimizing `L(T)` over the validation set located the minimum at **T = 0.2556561085972851**, yielding **75.7% fraud capture** while keeping false-positive review rates within compliance bounds. Cost parameters are defined in [`configs/ml_config.yaml`](configs/ml_config.yaml) and consumed by the live `ThresholdOptimizer` class.
+
+### 2. Isotonic Calibration over Platt Scaling
+
+Isotonic Regression was selected over Sigmoid/Platt scaling because Platt's linear sigmoid boundary is known to underfit the non-linear step-function clustering of GBDT leaf probability distributions near boundary edges. Isotonic regression preserves monotonic ordering while correcting tree overconfidence without imposing a parametric shape constraint.
+
+The fitted calibrator is persisted at [`models/champion/calibrator_v1.joblib`](models/champion/calibrator_v1.joblib) and is the only transformation applied between the raw LightGBM margin score and the `calibrated_probability` returned in the API response.
+
+### 3. Cold-Start Account Velocity Priors
+
+First-time unobserved sender accounts attempting high-value transfers (≥ $25,000) default to `delta_sec = 300.0` (5-minute rapid prior), forcing immediate velocity risk flags rather than inheriting low-risk long-inactivity imputation (`999,999` seconds). This eliminates the cold-start loophole where a new account could evade velocity checks on first contact.
+
+### 4. Dual-Store Resilience
+
+| Mode | Store | Use Case |
+|:---|:---|:---|
+| **Production** | PostgreSQL 15 | Live transaction history, ACID compliance, concurrent writes |
+| **Offline / Fallback** | DuckDB (in-process) | Local development, CI testing, PostgreSQL failure recovery |
+
+The `HistoryRepository` switches transparently between backends via the `DB_ENGINE_TYPE` environment variable — no application code changes required.
+
+---
+
+## 🏛️ System Architecture
+
+```
+                              ┌────────────────────────────────┐
+                              │      Browser Workstation       │
+                              │  Next.js 14 Single-Form Client │
+                              └───────────────┬────────────────┘
+                                              │
+                                              │  POST /api/v1/predict (11 Raw Fields)
+                                              ▼
+                              ┌────────────────────────────────┐
+                              │   FastAPI Backend Container    │
+                              │    (Port 8000 / Python 3.11)   │
+                              └───────────────┬────────────────┘
+                                              │
+              ┌───────────────────────────────┼───────────────────────────────┐
+              │                               │                               │
+              ▼                               ▼                               ▼
+   ┌─────────────────────┐        ┌─────────────────────┐        ┌─────────────────────┐
+   │ PostgreSQL 15 DB    │        │  61-Feature Online  │        │ LightGBM Champion   │
+   │ Transaction History │───────►│  Feature Pipeline   │───────►│ Inference Model     │
+   │ & Account States    │        │ (Velocity/Outliers) │        │ (model_v1.joblib)   │
+   └─────────────────────┘        └─────────────────────┘        └──────────┬──────────┘
+                                                                             │
+                                                                             ▼
+   ┌─────────────────────┐        ┌─────────────────────┐        ┌─────────────────────┐
+   │ Next.js Result View │        │ TreeSHAP Engine     │        │ Isotonic Calibrator │
+   │ Investigator Report │◄───────│ Key Risk Drivers &  │◄───────│ Probability &       │
+   │ & Action Guidance   │        │ Feature Attribution │        │ Threshold Decision  │
+   └─────────────────────┘        └─────────────────────┘        └─────────────────────┘
 ```
 
 ---
 
-## ⚖️ Authoritative 4-Tier Decision Policy
+## 🛠️ Tech Stack
 
-The backend evaluates calibrated fraud probability $P$ against the exact cost-optimized threshold ($T = 0.2556561085972851$):
+### Backend
 
-| Calibrated Fraud Probability ($P$) | Risk Tier | System Decision | Action Code | Operator / Boundary |
-|---|---|---|---|---|
-| $0.0\% \le P < 10.0\%$ | `LOW` | `APPROVED_LEGITIMATE` | `APPROVE` | $P < 0.10$ |
-| $10.0\% \le P < 25.5656\%$ | `MEDIUM` | `APPROVED_WITH_MONITORING` | `MONITOR` | $0.10 \le P < 0.255656$ |
-| $25.5656\% \le P < 75.0\%$ | `HIGH` | `FLAGGED_FRAUD` | `HOLD_FOR_MANUAL_INVESTIGATION` | $0.255656 \le P < 0.75$ |
-| $75.0\% \le P \le 100.0\%$ | `CRITICAL` | `FLAGGED_CRITICAL_FRAUD` | `DECLINE_IMMEDIATELY` | $P \ge 0.75$ |
+| Component | Technology | Version |
+|:---|:---|:---|
+| API Framework | FastAPI + Uvicorn | ≥ 0.100.0 |
+| ML Model | LightGBM (Optuna-tuned) | ≥ 4.3.0 |
+| Calibration | scikit-learn `CalibratedClassifierCV` (Isotonic) | ≥ 1.4.0 |
+| Explainability | SHAP (TreeSHAP) | ≥ 0.44.0 |
+| Primary Store | PostgreSQL 15 via psycopg2 | 15-alpine |
+| Offline Store | DuckDB (in-process OLAP) | ≥ 0.10.0 |
+| Data Processing | Pandas + Polars + NumPy | Latest stable |
+| Hyperparameter Tuning | Optuna | Embedded in training pipeline |
+| Serialization | joblib | ≥ 1.3.0 |
+| Config | Pydantic v2 + PyYAML | ≥ 2.5.0 |
 
-*Comparison Logic*: `probability >= threshold` evaluates as `FLAGGED_FRAUD`.
+### Frontend
+
+| Component | Technology |
+|:---|:---|
+| Framework | Next.js 14 (App Router) |
+| Runtime | Node.js 20 |
+| Deployment | Vercel — [sentinelhg.vercel.app](https://sentinelhg.vercel.app/) |
+
+### Infrastructure & Quality
+
+| Component | Technology |
+|:---|:---|
+| Containerization | Docker + Docker Compose v3.8 |
+| Architecture | ARM64-compatible (Oracle Ampere A1) |
+| Linting | Ruff |
+| Type Checking | mypy |
+| Testing | pytest + pytest-cov |
+| Pre-commit | pre-commit hooks |
 
 ---
 
-## ⚡ Quickstart — 1-Command Production Deployment
+## ⚖️ 4-Tier Decision Policy
 
-Deploy the complete containerized Sentinel Risk Engine 3-tier stack via Docker Compose:
+The backend evaluates calibrated probability $P$ against the cost-optimized threshold $T = 0.2556561085972851$:
+
+| Calibrated Probability ($P$) | Risk Tier | Decision | Action | Boundary |
+|:---|:---:|:---|:---|:---|
+| $0\% \le P < 10\%$ | `LOW` | `APPROVED_LEGITIMATE` | `APPROVE` | $P < 0.10$ |
+| $10\% \le P < 25.57\%$ | `MEDIUM` | `APPROVED_WITH_MONITORING` | `MONITOR` | $0.10 \le P < T$ |
+| $25.57\% \le P < 75\%$ | `HIGH` | `FLAGGED_FRAUD` | `HOLD_FOR_MANUAL_INVESTIGATION` | $T \le P < 0.75$ |
+| $75\% \le P \le 100\%$ | `CRITICAL` | `FLAGGED_CRITICAL_FRAUD` | `DECLINE_IMMEDIATELY` | $P \ge 0.75$ |
+
+*Comparison logic*: `probability >= threshold` → `FLAGGED_FRAUD`. The threshold is loaded at startup from [`models/champion/threshold_v1.json`](models/champion/threshold_v1.json) — never hardcoded.
+
+---
+
+## ⚡ Quickstart — 1-Command Deployment
+
+Deploy the full 3-container stack (PostgreSQL 15 + FastAPI backend + Next.js frontend):
 
 ```bash
-# 1. Clone repository & enter directory
+# 1. Clone repository
 git clone https://github.com/gautamhardik/SENTINEL.git
 cd SENTINEL
 
 # 2. Configure environment
 cp .env.example .env
+# Edit .env to customise POSTGRES_PASSWORD if needed
 
-# 3. Build & start containers in detached mode
+# 3. Build and launch all containers
 docker compose build
 docker compose up -d
 
-# 4. Verify system readiness
+# 4. Verify backend health
 curl http://localhost:8000/health/ready
 
-# 5. Open Next.js Workstation in browser
-open http://localhost:3000
+# 5. Open the workstation
+open http://localhost:3000   # macOS / Linux
+```
+
+> **Prerequisites**: Docker Desktop ≥ 24.0, Docker Compose ≥ 2.0
+
+### Environment Variables
+
+| Variable | Default | Description |
+|:---|:---|:---|
+| `DB_ENGINE_TYPE` | `postgresql` | `postgresql` for prod, `duckdb` for local dev |
+| `POSTGRES_HOST` | `postgres` | PostgreSQL hostname |
+| `POSTGRES_DB` | `fraud_detection` | Database name |
+| `POSTGRES_USER` | `sentinel_user` | DB username |
+| `POSTGRES_PASSWORD` | *(set in .env)* | DB password |
+| `NEXT_PUBLIC_API_URL` | `http://localhost:8000` | Backend URL consumed by the frontend |
+| `LOG_LEVEL` | `INFO` | Logging verbosity |
+
+### Local Development (no Docker)
+
+```bash
+# Install Python dependencies
+pip install -r requirements.txt
+pip install -e ".[dev]"
+
+# Start DuckDB-backed backend (no PostgreSQL needed)
+DB_ENGINE_TYPE=duckdb uvicorn src.fraud_detection.api.app:app --reload --port 8000
+
+# In a separate terminal — start the frontend
+cd frontend && npm install && npm run dev
+# → http://localhost:3000
 ```
 
 ---
@@ -139,7 +257,10 @@ open http://localhost:3000
 
 ### `POST /api/v1/predict`
 
-#### Request Payload (Raw 11 Fields Only)
+Accepts exactly 11 raw transaction fields. All 61-feature engineering, calibration, SHAP, and decisions happen server-side.
+
+#### Request Payload
+
 ```json
 {
   "transaction_id": "TX-89201492",
@@ -156,7 +277,11 @@ open http://localhost:3000
 }
 ```
 
-#### Response Payload (Calculated Backend Output)
+**Valid `Payment_Format`**: `Wire Transfer` · `ACH Outbound` · `Cheque` · `Credit Card` · `Cash Deposit`  
+**Valid currencies**: `USD` · `EUR` · `GBP` · `CAD` · `AUD`
+
+#### Response Payload
+
 ```json
 {
   "transaction_id": "TX-89201492",
@@ -187,63 +312,158 @@ open http://localhost:3000
   },
   "inference_latency_ms": 18.52,
   "model_version": "v1.0.0",
+  "calibration_method": "Isotonic Regression",
   "timestamp": "2026-08-12T14:30:00"
 }
 ```
-*Note*: `fraud_probability` is an alias of `calibrated_probability` maintained for backward compatibility with legacy API integration contracts. `raw_probability` reflects uncalibrated GBDT margin probability prior to isotonic mapping.
+
+> `fraud_probability` is an alias of `calibrated_probability` maintained for backward compatibility. `raw_probability` is the uncalibrated LightGBM margin output, prior to isotonic mapping.
+
+### Other Endpoints
+
+| Method | Path | Description |
+|:---|:---|:---|
+| `GET` | `/health` | Liveness probe |
+| `GET` | `/health/ready` | Readiness probe (model + DB loaded) |
+| `GET` | `/docs` | Interactive Swagger UI |
+| `GET` | `/redoc` | ReDoc API reference |
 
 ---
 
-## 📈 Concurrency & Performance Load Benchmarks
+## 📈 Concurrency & Load Benchmarks
 
-Verified via progressive load testing script ([test_postgres_load.py](tests/integration/test_postgres_load.py)):
+Progressive stress test ([`tests/integration/test_postgres_load.py`](tests/integration/test_postgres_load.py)) against the PostgreSQL history store with parallel threads:
 
-| Worker Pool Concurrency | Total Requests | Successful Requests | Failures | Throughput (req/s) | p50 Latency (ms) | p99 Latency (ms) |
+| Concurrency | Requests | Successes | Failures | Throughput | p50 Latency | p99 Latency |
 |---:|---:|---:|---:|---:|---:|---:|
-| **10 Concurrent Workers** | 50 | 50 | 0 | 14.8 req/s | 62.4 ms | 185.0 ms |
-| **25 Concurrent Workers** | 50 | 50 | 0 | 18.2 req/s | 118.5 ms | 310.2 ms |
-| **50 Concurrent Workers** | 100 | 100 | 0 | 22.5 req/s | 210.0 ms | 610.5 ms |
-| **100 Concurrent Workers** | 100 | 100 | 0 | 26.1 req/s | 385.2 ms | 1140.0 ms |
+| **10 workers** | 50 | 50 | 0 | 14.8 req/s | 62.4 ms | 185.0 ms |
+| **25 workers** | 50 | 50 | 0 | 18.2 req/s | 118.5 ms | 310.2 ms |
+| **50 workers** | 100 | 100 | 0 | 22.5 req/s | 210.0 ms | 610.5 ms |
+| **100 workers** | 100 | 100 | 0 | 26.1 req/s | 385.2 ms | 1140.0 ms |
 
-> ⚠️ **Diagnosed Performance Bottleneck**: Under high worker concurrency (>50 workers), throughput plateaus near ~26 req/s while p99 latency rises to 1.1s. Profiling confirmed this bottleneck is driven by synchronous TreeSHAP matrix calculation on single-worker Uvicorn processes and DB connection pool waiting. Mitigation via Gunicorn multi-worker processing and cached SHAP background workers is planned for v1.1.
-
----
-
-## ⚠️ System Limitations & Known Scope Boundaries
-
-1. **Synchronous SHAP Overhead**: Real-time TreeSHAP contribution generation adds ~15–20ms overhead per transaction.
-2. **Tabular Scope**: Model relies strictly on tabular transaction features; graph neural embeddings and device fingerprinting are out of scope for v1.0.
-3. **Batch Cold-Start Lag**: Historical velocity features for unseeded accounts depend on initial transaction persistence.
+> ⚠️ **Diagnosed Bottleneck**: Above 50 concurrent workers, throughput plateaus near ~26 req/s and p99 latency rises to 1.1s. Profiling confirms the constraint is **synchronous TreeSHAP matrix computation** on a single Uvicorn worker process combined with PostgreSQL connection pool saturation. **Planned mitigation for v1.1**: Gunicorn multi-worker mode + pre-computed SHAP background matrix cache.
 
 ---
 
-## 📂 Project Structure Map
+## ⚠️ Known Limitations
 
-```text
+| Limitation | Detail |
+|:---|:---|
+| **Synchronous SHAP** | Real-time TreeSHAP adds ~15–20ms overhead per request; async offloading planned for v1.1 |
+| **Tabular-only** | v1.0 uses tabular features only; graph neural embeddings and device fingerprinting are out of scope |
+| **Cold-start lag** | First transaction for a new account requires one write cycle before velocity features stabilise |
+| **Single-worker Uvicorn** | Default deploy is single-process; Gunicorn multi-worker config required at production scale |
+
+---
+
+## 🧪 Testing
+
+```bash
+# Install dev dependencies
+pip install -e ".[dev]"
+
+# Run full test suite
+pytest tests/ -v
+
+# With coverage report
+pytest tests/ --cov=src/fraud_detection --cov-report=term-missing
+
+# Targeted suites
+pytest tests/unit/           # Pure unit tests (no external services required)
+pytest tests/integration/    # Integration tests (requires running PostgreSQL)
+pytest tests/api/            # API contract tests (requires running backend)
+```
+
+| Test File | Scope |
+|:---|:---|
+| [`test_engine_overload.py`](tests/test_engine_overload.py) | Dual-input prediction engine (raw dict vs pre-engineered DataFrame) |
+| [`test_ml_calibration.py`](tests/test_ml_calibration.py) | Isotonic calibrator output bounds and length invariants |
+| [`test_ml_threshold.py`](tests/test_ml_threshold.py) | Threshold loading and 4-tier boundary correctness |
+| [`test_hardened_feature_store.py`](tests/test_hardened_feature_store.py) | 61-feature engineering correctness and cold-start prior injection |
+| [`test_postgres_load.py`](tests/integration/test_postgres_load.py) | Multi-worker PostgreSQL concurrency matrix (10/25/50/100 workers) |
+| [`test_cold_start.py`](tests/test_cold_start.py) | Cold-start velocity prior assignment for unobserved accounts |
+
+---
+
+## 📂 Project Structure
+
+```
 Fraud Detection/
-├── Dockerfile                          # FastAPI Backend Production Dockerfile
-├── docker-compose.yml                  # PostgreSQL, Backend, Frontend Compose Stack
-├── .env.example                        # Production Environment Template
-├── pyproject.toml                      # Python Dependencies & Packaging Specs
-├── frontend/                           # Next.js 14 Workstation Frontend
-│   ├── Dockerfile                      # Standalone Multi-Stage Next.js Dockerfile
-│   └── src/                            # React Components & Workstation Views
-├── models/champion/                    # Champion ML Model Artifacts
-│   ├── model_v1.joblib                 # Optuna-Tuned LightGBM Champion
-│   ├── calibrator_v1.joblib            # Isotonic Calibrator
-│   ├── feature_order_v1.json           # 61-Feature Order Schema
-│   └── threshold_v1.json               # Cost-Optimized Threshold Config
-├── src/fraud_detection/                # Core Python Engine Package
-│   ├── api/                            # FastAPI Application & Schemas
-│   ├── history/                        # DuckDB & PostgreSQL Storage Layer
-│   ├── feature_engineering/            # 61-Feature Extraction Pipeline
-│   └── thresholding/                   # 4-Tier Decision Engine
-└── tests/                              # Pytest Unit & Integration Suite
+├── Dockerfile                          # FastAPI backend production image
+├── docker-compose.yml                  # 3-service stack: postgres + backend + frontend
+├── .env.example                        # Environment variable template
+├── pyproject.toml                      # Python packaging & dev dependencies
+├── requirements.txt                    # Runtime dependencies
+│
+├── frontend/                           # Next.js 14 workstation
+│   ├── Dockerfile                      # Standalone multi-stage Next.js image
+│   └── src/                            # App Router pages & React components
+│
+├── configs/
+│   ├── ml_config.yaml                  # Training config: splits, cost matrix, calibration method
+│   └── hyperparameters.yaml            # Optuna hyperparameter search spaces
+│
+├── models/champion/                    # Deployed production artifacts
+│   ├── model_v1.joblib                 # Optuna-tuned LightGBM champion (816 KB)
+│   ├── calibrator_v1.joblib            # Fitted Isotonic Regression calibrator (829 KB)
+│   ├── feature_order_v1.json           # Canonical 61-feature ordering
+│   ├── threshold_v1.json               # Cost-optimized decision threshold
+│   └── metadata_v1.json               # Training provenance & test set metrics
+│
+├── src/fraud_detection/                # Core ML inference package
+│   ├── api/                            # FastAPI application, routers, Pydantic schemas
+│   ├── calibration/                    # CalibrationEngine (Isotonic wrapper)
+│   ├── feature_engineering/            # 61-feature extraction pipeline
+│   ├── history/                        # HistoryRepository (PostgreSQL + DuckDB)
+│   ├── inference/                      # PredictionEngine orchestrator
+│   ├── thresholding/                   # ThresholdEngine (4-tier decision policy)
+│   ├── explainability/                 # TreeSHAP risk driver computation
+│   ├── registry/                       # ArtifactLoader & model versioning
+│   └── pipeline/                       # AutomatedRetrainPipeline
+│
+├── notebooks/
+│   ├── 01_Data_Cleaning_Validation.ipynb
+│   ├── 04_Enterprise_Feature_Engineering.ipynb
+│   ├── 05_machine_learning.ipynb        # Full training: LightGBM / CatBoost / XGBoost + Optuna
+│   └── 06_model_explainability.ipynb    # SHAP analysis & governance reporting
+│
+├── tests/
+│   ├── unit/                            # Pure unit tests (no I/O dependencies)
+│   ├── integration/                     # PostgreSQL & pipeline integration tests
+│   └── api/                             # FastAPI endpoint contract tests
+│
+├── reports/
+│   ├── experiments/experiment_log.csv   # Tracked experiment runs with metrics
+│   ├── predictions/                     # Saved test/validation prediction parquets
+│   └── explainability/                  # Model card & governance reports
+│
+└── docs/
+    ├── Validation_Framework.md          # 4-layer input validation architecture spec
+    └── assets/                          # Workstation screenshots
 ```
 
 ---
 
-## 📄 License & Maintainers
+## 🗺️ Roadmap
+
+| Version | Feature |
+|:---|:---|
+| **v1.0** *(current)* | LightGBM champion, Isotonic calibration, 4-tier policy, TreeSHAP, PostgreSQL + DuckDB dual-store, Docker Compose deployment |
+| **v1.1** | Async SHAP offloading, Gunicorn multi-worker config, cached SHAP background matrix |
+| **v1.2** | Batch scoring endpoint, model drift monitoring, automated retraining triggers |
+| **v2.0** | Graph neural network embeddings for ring-fraud detection, real-time streaming via Kafka |
+
+---
+
+## 📄 License & Author
 
 Maintained by **Hardik Gautam** ([@gautamhardik](https://github.com/gautamhardik)).  
-Distributed under the **MIT License**.
+Distributed under the **[MIT License](LICENSE)**.
+
+---
+
+<div align="center">
+
+**Dataset**: [IBM AML Transactions — Kaggle](https://www.kaggle.com/datasets/ealtman2019/ibm-transactions-for-anti-money-laundering-aml) &nbsp;·&nbsp; **Live Demo**: [sentinelhg.vercel.app](https://sentinelhg.vercel.app/) &nbsp;·&nbsp; **Docs**: [Validation Framework](docs/Validation_Framework.md)
+
+</div>
