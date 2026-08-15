@@ -19,19 +19,9 @@
 
 ---
 
-Demo Video
+## Demo Video
 
 https://github.com/user-attachments/assets/88cbdd3f-6728-4cfc-9883-a144aa900407
-
----
-
-
-
-## Live Workstation
-
-| Transaction Risk Screening Form | Calibrated Risk Assessment & SHAP Drivers |
-| :---: | :---: |
-| ![Screening Form](docs/assets/hero_screening.png) | ![Risk Results & SHAP Drivers](docs/assets/risk_results.png) |
 
 ---
 
@@ -46,17 +36,27 @@ https://github.com/user-attachments/assets/88cbdd3f-6728-4cfc-9883-a144aa900407
 
 ---
 
+## Live Workstation
+
+The investigator workstation is a focused, single-form interface — no chart grids, no sidebars. Submit a transaction and receive a fully explainable risk verdict instantly.
+
+![Transaction Risk Screening Form](docs/assets/hero_screening.png)
+
+*The screening form accepts exactly 11 raw transaction fields. All feature engineering happens server-side.*
+
+---
+
 ## Champion Model Performance
 
 Evaluated on a held-out independent test partition of **~302,000 transactions** (15% temporal split of the 2.0M-row IBM AML dataset):
 
 | Metric | Value | Benchmark | Status |
 |:---|:---:|:---:|:---:|
-| ROC-AUC | 0.9689 | ≥ 0.9000 | PASS |
-| PR-AUC | 0.6574 | ≥ 0.6000 | PASS |
-| F1-Score (at T = 0.2557) | 0.6560 | ≥ 0.6000 | PASS |
-| Fraud Recall / Capture Rate | 75.7% | ≥ 70.0% | PASS |
-| Inference Latency | < 25 ms | ≤ 50 ms | PASS |
+| ROC-AUC | 0.9689 | ≥ 0.9000 | ✅ PASS |
+| PR-AUC | 0.6574 | ≥ 0.6000 | ✅ PASS |
+| F1-Score (at T = 0.2557) | 0.6560 | ≥ 0.6000 | ✅ PASS |
+| Fraud Recall / Capture Rate | 75.7% | ≥ 70.0% | ✅ PASS |
+| Inference Latency | < 25 ms | ≤ 50 ms | ✅ PASS |
 
 > All values read directly from [`models/champion/metadata_v1.json`](models/champion/metadata_v1.json) and [`models/champion/threshold_v1.json`](models/champion/threshold_v1.json) — the deployed production artifacts.
 
@@ -92,7 +92,7 @@ L(T) = 500 × FN(T) + 15 × FP(T)
 ```
 
 | Cost Type | Assumed Unit Cost | Rationale |
-|:---|:---:|:---|
+|:---|:---|:---|
 | False Negative (missed fraud) | $500 | Average fraud loss per undetected transaction |
 | False Positive (unnecessary hold) | $15 | Manual investigator review overhead |
 
@@ -203,6 +203,12 @@ The backend evaluates calibrated probability `P` against the cost-optimized thre
 | 75% ≤ P ≤ 100% | `CRITICAL` | `FLAGGED_CRITICAL_FRAUD` | `DECLINE_IMMEDIATELY` | P ≥ 0.75 |
 
 *Comparison logic*: `probability >= threshold` → `FLAGGED_FRAUD`. The threshold is loaded at startup from [`models/champion/threshold_v1.json`](models/champion/threshold_v1.json) — never hardcoded.
+
+After a transaction is screened, the result card surfaces calibrated probability, the 4-tier verdict, and ranked SHAP risk drivers:
+
+![Calibrated Risk Assessment & SHAP Drivers](docs/assets/risk_results.png)
+
+*The result view shows the calibrated probability, risk tier, recommended action, and top SHAP feature attributions — all generated server-side.*
 
 ---
 
