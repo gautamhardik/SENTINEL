@@ -10,6 +10,7 @@
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-336791?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 [![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)](docker-compose.yml)
 [![CI](https://img.shields.io/github/actions/workflow/status/gautamhardik/SENTINEL/ci.yml?label=CI&logo=githubactions&color=6366f1)](https://github.com/gautamhardik/SENTINEL/actions/workflows/ci.yml)
+[![Coverage](https://img.shields.io/badge/coverage-%E2%89%A5%2080%25-2ea44f?logo=python&logoColor=white)](https://github.com/gautamhardik/SENTINEL/actions/workflows/ci.yml) 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
 
 **A production-grade, end-to-end ML system** that screens financial transactions for fraud in real time — complete with calibrated risk probabilities, TreeSHAP explainability, a 4-tier decision policy, and a live interactive workstation.
@@ -20,17 +21,19 @@
 
 ---
 
-## 🎥 Demo Video
+<a id="demo-video"></a>
+## Demo Video
 
 Watch the full end-to-end workflow — submit a transaction, get a calibrated verdict, and explore the SHAP drivers:
 
-<video controls src="https://github.com/user-attachments/assets/88cbdd3f-6728-4cfc-9883-a144aa900407">
+<video controls poster="docs/assets/hero_screening.png" preload="metadata" playsinline style="width:100%; max-width:760px; margin:0 auto; display:block;" src="https://github.com/user-attachments/assets/88cbdd3f-6728-4cfc-9883-a144aa900407">
   <p>Your browser does not support embedded video. <a href="https://github.com/user-attachments/assets/88cbdd3f-6728-4cfc-9883-a144aa900407">Watch the demo on GitHub ↗</a></p>
 </video>
 
 ---
 
-## ⚡ At a Glance
+<a id="at-a-glance"></a>
+## At a Glance
 
 | | |
 |:---|:---|
@@ -43,9 +46,11 @@ Watch the full end-to-end workflow — submit a transaction, get a calibrated ve
 
 ---
 
-## 📑 Table of Contents
+<a id="table-of-contents"></a>
+## Table of Contents
 
 - [Demo Video](#demo-video)
+- [At a Glance](#at-a-glance)
 - [What This Is](#what-this-is)
 - [Live Workstation](#live-workstation)
 - [Champion Model Performance](#champion-model-performance)
@@ -61,6 +66,7 @@ Watch the full end-to-end workflow — submit a transaction, get a calibrated ve
 - [Testing](#testing)
 - [Project Structure](#project-structure)
 - [Roadmap](#roadmap)
+- [Contributing](#contributing)
 
 ---
 
@@ -392,6 +398,26 @@ Progressive stress test ([`tests/integration/test_postgres_load.py`](tests/integ
 
 > **Diagnosed Bottleneck**: Above 50 concurrent workers, throughput plateaus near ~26 req/s and p99 latency rises to 1.1s. Profiling confirms the constraint is synchronous TreeSHAP matrix computation on a single Uvicorn worker process combined with PostgreSQL connection pool saturation. **Planned mitigation for v1.1**: Gunicorn multi-worker mode + pre-computed SHAP background matrix cache.
 
+**Throughput vs. Concurrency:**
+
+```mermaid
+xychart-beta
+    title "Throughput vs. Concurrency"
+    x-axis [10, 25, 50, 100]
+    y-axis "req/s" 0 --> 30
+    line [14.8, 18.2, 22.5, 26.1]
+```
+
+**p99 Latency vs. Concurrency:**
+
+```mermaid
+xychart-beta
+    title "p99 Latency (ms)"
+    x-axis [10, 25, 50, 100]
+    y-axis "latency (ms)" 0 --> 1200
+    bar [185.0, 310.2, 610.5, 1140.0]
+```
+
 ---
 
 ## Known Limitations
@@ -501,6 +527,25 @@ Fraud Detection/
 | v1.1 | Async SHAP offloading, Gunicorn multi-worker config, cached SHAP background matrix |
 | v1.2 | Batch scoring endpoint, model drift monitoring, automated retraining triggers |
 | v2.0 | Graph neural network embeddings for ring-fraud detection, real-time streaming via Kafka |
+
+---
+
+<a id="contributing"></a>
+## Contributing
+
+Contributions that strengthen the fraud-screening pipeline are welcome. The project enforces type-checked, linted, and coverage-gated code (`mypy`, `ruff`, `pytest --cov-fail-under=80`) — every PR must pass the [CI pipeline](https://github.com/gautamhardik/SENTINEL/actions/workflows/ci.yml).
+
+1. **Fork** the repo and create a branch from `main`.
+2. **Develop** — add tests alongside any change (`tests/unit`, `tests/integration`, `tests/api`).
+3. **Validate locally:**
+   ```bash
+   ruff check .
+   mypy src/fraud_detection backend/app --ignore-missing-imports
+   pytest tests/ --cov=src/fraud_detection --cov=backend/app --cov-fail-under=80
+   ```
+4. **Open a PR** describing the change and its impact on the 4-tier decision policy.
+
+Backlog is tracked in the [Roadmap](#roadmap) and prioritized around v1.1 (async SHAP, multi-worker) and v2.0 (graph embeddings).
 
 ---
 
