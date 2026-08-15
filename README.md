@@ -9,6 +9,7 @@
 [![Next.js 14](https://img.shields.io/badge/Next.js-14-000000?logo=next.js&logoColor=white)](https://nextjs.org/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-336791?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 [![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)](docker-compose.yml)
+[![CI](https://img.shields.io/github/actions/workflow/status/gautamhardik/SENTINEL/ci.yml?label=CI&logo=githubactions&color=6366f1)](https://github.com/gautamhardik/SENTINEL/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
 
 **A production-grade, end-to-end ML system** that screens financial transactions for fraud in real time — complete with calibrated risk probabilities, TreeSHAP explainability, a 4-tier decision policy, and a live interactive workstation.
@@ -19,9 +20,47 @@
 
 ---
 
-## Demo Video
+## 🎥 Demo Video
 
-https://github.com/user-attachments/assets/88cbdd3f-6728-4cfc-9883-a144aa900407
+Watch the full end-to-end workflow — submit a transaction, get a calibrated verdict, and explore the SHAP drivers:
+
+<video controls src="https://github.com/user-attachments/assets/88cbdd3f-6728-4cfc-9883-a144aa900407">
+  <p>Your browser does not support embedded video. <a href="https://github.com/user-attachments/assets/88cbdd3f-6728-4cfc-9883-a144aa900407">Watch the demo on GitHub ↗</a></p>
+</video>
+
+---
+
+## ⚡ At a Glance
+
+| | |
+|:---|:---|
+| **What it does** | Screens a single transaction (11 raw fields) → calibrated fraud probability, 4-tier verdict, ranked SHAP drivers — in **< 25 ms** |
+| **Model** | LightGBM champion (Optuna-tuned) · Isotonic calibration · cost-optimized threshold `T = 0.26` |
+| **Detection quality** | ROC-AUC **0.9689** · PR-AUC **0.6574** · fraud capture **75.7%** |
+| **Explainability** | TreeSHAP on every request — no black-box verdicts |
+| **Stack** | FastAPI · LightGBM · SHAP · Next.js 14 · PostgreSQL 15 / DuckDB · Docker Compose |
+| **Deploy** | `docker compose up -d` → workstation at `http://localhost:3000` |
+
+---
+
+## 📑 Table of Contents
+
+- [Demo Video](#demo-video)
+- [What This Is](#what-this-is)
+- [Live Workstation](#live-workstation)
+- [Champion Model Performance](#champion-model-performance)
+- [Dataset](#dataset)
+- [Key Technical Design Decisions](#key-technical-design-decisions)
+- [System Architecture](#system-architecture)
+- [Tech Stack](#tech-stack)
+- [4-Tier Decision Policy](#4-tier-decision-policy)
+- [Quickstart — 1-Command Deployment](#quickstart--1-command-deployment)
+- [API Specification & Payload Contract](#api-specification--payload-contract)
+- [Concurrency & Load Benchmarks](#concurrency--load-benchmarks)
+- [Known Limitations](#known-limitations)
+- [Testing](#testing)
+- [Project Structure](#project-structure)
+- [Roadmap](#roadmap)
 
 ---
 
@@ -51,7 +90,7 @@ The investigator workstation is a focused, single-form interface — no chart gr
 Evaluated on a held-out independent test partition of **~302,000 transactions** (15% temporal split of the 2.0M-row IBM AML dataset):
 
 | Metric | Value | Benchmark | Status |
-|:---|:---:|:---:|:---:|
+|:---|---:|---:|:---:|
 | ROC-AUC | 0.9689 | ≥ 0.9000 | ✅ PASS |
 | PR-AUC | 0.6574 | ≥ 0.6000 | ✅ PASS |
 | F1-Score (at T = 0.2557) | 0.6560 | ≥ 0.6000 | ✅ PASS |
@@ -59,6 +98,8 @@ Evaluated on a held-out independent test partition of **~302,000 transactions** 
 | Inference Latency | < 25 ms | ≤ 50 ms | ✅ PASS |
 
 > All values read directly from [`models/champion/metadata_v1.json`](models/champion/metadata_v1.json) and [`models/champion/threshold_v1.json`](models/champion/threshold_v1.json) — the deployed production artifacts.
+
+**Result artifacts:** [prediction parquets](reports/predictions/) · [model card & governance report](reports/explainability/) · [experiment log](reports/experiments/experiment_log.csv)
 
 ---
 
@@ -122,33 +163,27 @@ The `HistoryRepository` switches transparently between backends via the `DB_ENGI
 ## System Architecture
 
 ```
-                              ┌────────────────────────────────┐
-                              │      Browser Workstation       │
-                              │  Next.js 14 Single-Form Client │
-                              └───────────────┬────────────────┘
-                                              │
-                                              │  POST /api/v1/predict (11 Raw Fields)
-                                              ▼
-                              ┌────────────────────────────────┐
-                              │   FastAPI Backend Container    │
-                              │    (Port 8000 / Python 3.11)   │
-                              └───────────────┬────────────────┘
-                                              │
-              ┌───────────────────────────────┼───────────────────────────────┐
-              │                               │                               │
-              ▼                               ▼                               ▼
-   ┌─────────────────────┐        ┌─────────────────────┐        ┌─────────────────────┐
-   │ PostgreSQL 15 DB    │        │  61-Feature Online  │        │ LightGBM Champion   │
-   │ Transaction History │───────►│  Feature Pipeline   │───────►│ Inference Model     │
-   │ & Account States    │        │ (Velocity/Outliers) │        │ (model_v1.joblib)   │
-   └─────────────────────┘        └─────────────────────┘        └──────────┬──────────┘
-                                                                             │
-                                                                             ▼
-   ┌─────────────────────┐        ┌─────────────────────┐        ┌─────────────────────┐
-   │ Next.js Result View │        │ TreeSHAP Engine     │        │ Isotonic Calibrator │
-   │ Investigator Report │◄───────│ Key Risk Drivers &  │◄───────│ Probability &       │
-   │ & Action Guidance   │        │ Feature Attribution │        │ Threshold Decision  │
-   └─────────────────────┘        └─────────────────────┘        └─────────────────────┘
+                        ┌────────────────────────────────┐
+                        │    Browser Workstation         │
+                        │    Next.js 14 Single-Form      │
+                        └───────────────┬────────────────┘
+                                        │  POST /api/v1/predict (11 Raw Fields)
+                                        ▼
+                        ┌────────────────────────────────┐
+                        │    FastAPI Backend (Python 3.11)│
+                        └───────────────┬────────────────┘
+                ┌───────────────────────┼───────────────────────┐
+                ▼                       ▼                       ▼
+   ┌─────────────────────┐   ┌─────────────────────┐   ┌─────────────────────┐
+   │ PostgreSQL 15 DB    │   │  61-Feature Online  │   │ LightGBM Champion   │
+   │ Transaction History │──►│  Feature Pipeline   │──►│ Inference Model     │
+   └─────────────────────┘   └─────────────────────┘   └──────────┬──────────┘
+                                                                  │
+                                                                  ▼
+   ┌─────────────────────┐   ┌─────────────────────┐   ┌─────────────────────┐
+   │ Next.js Result View │◄──│ TreeSHAP Engine     │◄──│ Isotonic Calibrator │
+   │ & Action Guidance   │   │ Key Risk Drivers    │   │ Probability & Tier  │
+   └─────────────────────┘   └─────────────────────┘   └─────────────────────┘
 ```
 
 ---
@@ -198,8 +233,8 @@ The backend evaluates calibrated probability `P` against the cost-optimized thre
 | Calibrated Probability (P) | Risk Tier | Decision | Action | Boundary |
 |:---|:---:|:---|:---|:---|
 | 0% ≤ P < 10% | `LOW` | `APPROVED_LEGITIMATE` | `APPROVE` | P < 0.10 |
-| 10% ≤ P < 25.57% | `MEDIUM` | `APPROVED_WITH_MONITORING` | `MONITOR` | 0.10 ≤ P < T |
-| 25.57% ≤ P < 75% | `HIGH` | `FLAGGED_FRAUD` | `HOLD_FOR_MANUAL_INVESTIGATION` | T ≤ P < 0.75 |
+| 10% ≤ P < 26% | `MEDIUM` | `APPROVED_WITH_MONITORING` | `MONITOR` | 0.10 ≤ P < T |
+| 26% ≤ P < 75% | `HIGH` | `FLAGGED_FRAUD` | `HOLD_FOR_MANUAL_INVESTIGATION` | T ≤ P < 0.75 |
 | 75% ≤ P ≤ 100% | `CRITICAL` | `FLAGGED_CRITICAL_FRAUD` | `DECLINE_IMMEDIATELY` | P ≥ 0.75 |
 
 *Comparison logic*: `probability >= threshold` → `FLAGGED_FRAUD`. The threshold is loaded at startup from [`models/champion/threshold_v1.json`](models/champion/threshold_v1.json) — never hardcoded.
